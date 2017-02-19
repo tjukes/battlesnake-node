@@ -19,10 +19,13 @@ router.post('/start', function (req, res) {
 // Handle POST request to '/move'
 router.post('/move', function (req, res) {
   // NOTE: Do something here to generate your move
+  function chooseRandomMove(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
 
   // Response data
   var data = {
-    move: 'up', // one of: ['up','down','left','right']
+    move: chooseRandomMove(['up','down','left','right']),
     taunt: 'Outta my way, snake!', // optional, but encouraged!
   }
 
