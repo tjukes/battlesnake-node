@@ -46,6 +46,15 @@ router.post('/move', function (req, res) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
+  // FINDING SELF
+  // Parameters: 'snakes' array & 'you' string from HTTP request body
+  // Returns coordinates of own snake's head
+  function findMyHead(snakes, myID) {
+    return snakes.find(function(snake) {return snake.id == myID;}).coords[0];
+  }
+  // Store location of own head for use in rest of 'move' logic
+  var myLocation = findMyHead(req.body.snakes, req.body.you);
+
   // Response data
   var data = {
     move: chooseRandomMove(['up','down','left','right']),
