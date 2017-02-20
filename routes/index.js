@@ -46,11 +46,6 @@ router.post('/move', function (req, res) {
     addSnakeToBoard(snake);
   })
 
-  // Keep this here until move functionality improved
-  function chooseRandomMove(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-  }
-
   // FINDING SELF
   // Parameters: 'snakes' array & 'you' string from HTTP request body
   // Returns coordinates of own snake's head
@@ -72,10 +67,38 @@ router.post('/move', function (req, res) {
   // Logic for choosing between multiple food points to be added later
   var path = findFoodPath(myLocation, req.body.food[0])
 
+  // Set move based on chosen path
+  // Parameter 'path' is an array of coordinates, includes start & end
+  // Parameter 'myLocation' is an (X,Y) coordinate for a single point
+  // Remember: board origin (0,0) is at *TOP LEFT*
+  // Snake cannot move diagonally
+  function getMove(path, location) {
+    var move = "";
+    // If X coords are different, movement is horizontal
+    var xDirection = location[0] - path[1][0];
+    if (xDirection > 0) {
+      move = "left";
+      return move;
+    }
+    if (xDirection < 0) {
+      move = "right";
+      return move;
+    }
+    // If Y coords are different, movememnt is vertical
+    var yDirection = location[1] - path[1][1];
+    if (yDirection > 0) {
+      move = "up";
+      return move;
+    }
+    if (yDirection < 0) {
+      move = "down";
+      return move;
+    }
+  }
 
   // Response data
   var data = {
-    move: chooseRandomMove(['up','down','left','right']),
+    move: getMove(path, myLocation),
     taunt: 'Outta my way, snake!', // optional, but encouraged!
   }
 
