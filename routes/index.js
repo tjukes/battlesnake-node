@@ -60,6 +60,19 @@ router.post('/move', function (req, res) {
   // Store location of own head for use in rest of 'move' logic
   var myLocation = findMyHead(req.body.snakes, req.body.you);
 
+  // FINDING PATHS
+
+  // Find path to a single food point
+  // Input: 'location' and 'destination' are each (X,Y) coords for a single point
+  // Returns array of coordinates including start and end points
+  function findFoodPath(location, destination) {
+    return finder.findPath(location[0], location[1], destination[0], destination[1], board);
+  }
+  // Find path from own head to first food point listed in request body
+  // Logic for choosing between multiple food points to be added later
+  var path = findFoodPath(myLocation, req.body.food[0])
+
+
   // Response data
   var data = {
     move: chooseRandomMove(['up','down','left','right']),
