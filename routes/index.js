@@ -21,6 +21,16 @@ router.post('/start', function (req, res) {
 // Handle POST request to '/move'
 router.post('/move', function (req, res) {
   // NOTE: Do something here to generate your move
+
+  // BUILDING THE BOARD
+
+  // Make a new *blank* board representation from the post request
+  // NOTE the pathfinding functions change the grid they assess
+  // so a new one is needed for every turn
+  var board = new PF.Grid(req.body.width, req.body.height);
+
+
+  // Keep this here until move functionality improved
   function chooseRandomMove(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
