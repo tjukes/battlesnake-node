@@ -29,6 +29,17 @@ router.post('/move', function (req, res) {
   // so a new one is needed for every turn
   var board = new PF.Grid(req.body.width, req.body.height);
 
+  // Take a snake's coords and make them non-walkable on the board
+  function addSnakeToBoard(snake) {
+    snake.coords.forEach(function(coord) {
+      board.setWalkableAt(coord[0], coord[1], false);
+    })
+  }
+
+  // Update board representation with all snake coords
+  req.body.snakes.forEach(function(snake) {
+    addSnakeToBoard(snake);
+  })
 
   // Keep this here until move functionality improved
   function chooseRandomMove(arr) {
