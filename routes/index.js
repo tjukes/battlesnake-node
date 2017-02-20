@@ -3,6 +3,11 @@ var router  = express.Router()
 
 var PF = require('pathfinding');
 
+// Create finder
+// To switch between different pathfinding algorithms, update this variable
+var finder = new PF.BestFirstFinder();
+
+
 // Handle POST request to '/start'
 router.post('/start', function (req, res) {
   // NOTE: Do something here to start the game
