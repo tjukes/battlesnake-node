@@ -1,6 +1,8 @@
 var express = require('express')
 var router  = express.Router()
 
+var PF = require('pathfinding');
+
 // Handle POST request to '/start'
 router.post('/start', function (req, res) {
   // NOTE: Do something here to start the game
