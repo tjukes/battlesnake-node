@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var grid = [];
 var Board = require('../src/gridBuilder.js');
-var Snake = require('../src/snake.js');
 var PF = require('pathfinding');
 var board;
 var data;
