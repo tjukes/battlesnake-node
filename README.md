@@ -28,6 +28,8 @@ Add documentation in the JSdoc format, found [here](http://usejsdoc.org/about-ge
 
 If you wish to edit the README, please do so on the README_snakespeare.md file.  It is used to autogenerate the README.md, so anything you add to README.md will be overwritten each time `npm run docs` is run.
 
+The documentation.yml file is for configuring the documentation generator.
+
 #### git-stuff
 
 Use branches for feature development or personal experimentation: `git checkout -b some-new-branch-name`
@@ -90,7 +92,7 @@ Class represents the board
 Create a board object.
 The board will keep track of the request information
 and keep the game states and other useful useful information
-inferred from the current state.
+infered from the current state.
 
 **Parameters**
 

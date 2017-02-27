@@ -2,15 +2,15 @@ exampleAI = require("./exampleAI.js");
 preprocessor = require("./preprocessor.js");
 
 function topAI(req) {
-  preprocessor = preprocessor(req)
-  board = preprocessor.board;
+  var data = preprocessor(req)
+  var board = data.currentBoard;
 
   // Run each AI
-  AIs = [exampleAI];
-  votes = AIs.map((fn) => fn(board));
+  var AIs = [exampleAI];
+  var votes = AIs.map((fn) => fn(board));
 
   // Change how to decide between AIs later
-  move = votes[0].move;
+  var move = votes[0].move;
 
   return move
 }
