@@ -30,7 +30,7 @@
   },
   "scripts": {
     "start": "nf start",
-    "docs": "./node_modules/documentation/bin/documentation.js build ai/** -f md -o README.md documentation.yml",
+    "docs": "./node_modules/documentation/bin/documentation.js build ai/** -f md -o README.md -c documentation.yml",
     "test": "jasmine"
   }
 }

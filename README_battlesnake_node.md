@@ -2,15 +2,6 @@
 
 A simple [BattleSnake AI](http://battlesnake.io) written in Javascript for NodeJS. Founded on the [Sendwithus starter snake](https://github.com/sendwithus/battlesnake-node)
 
---------------------------------
-
-### Team: Nate Rosenstock, Arkadi Futerman, Ryder Bergerud, Tana Jukes
-
-Use branches for feature development or personal experimentation: `git checkout -b some-new-branch-name`
-
-Merge to master via Github pull requests.
-
---------------------------------
 
 ### Getting started (from Sendwithus)
 See https://github.com/sendwithus/battlesnake-node for full details or to start a new snake from a blank slate.
