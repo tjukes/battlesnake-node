@@ -18,13 +18,19 @@
     "nodemon": "^1.11.0"
   },
   "devDependencies": {
-    "foreman": "^2.0.0"
+    "documentation": "^4.0.0-beta.18",
+    "foreman": "^2.0.0",
+    "jasmine": "^2.5.3",
+    "jasmine-core": "^2.5.2",
+    "uuid": "^3.0.1"
   },
   "main": "index.js",
   "engines": {
     "node": "6.x"
   },
   "scripts": {
-    "start": "nf start"
+    "start": "nf start",
+    "docs": "./node_modules/documentation/bin/documentation.js build ai/** -f md -o README.md -c documentation.yml",
+    "test": "jasmine"
   }
 }
