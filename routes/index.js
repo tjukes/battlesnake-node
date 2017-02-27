@@ -1,5 +1,8 @@
+'use strict';
+
 var express = require('express')
 var router  = express.Router()
+var PF = require('pathfinding')
 
 // Handle POST request to '/start'
 router.post('/start', function (req, res) {
@@ -7,10 +10,10 @@ router.post('/start', function (req, res) {
 
   // Response data
   var data = {
-    color: "#DFFF00",
-    name: "SnakeSpeare",
+    color: "pink",
+    name: "Arksnake",
     head_url: "../spearhead.png", // optional, but encouraged!
-    taunt: "Come, come, you froward and unable worms!", // optional, but encouraged!
+    taunt: "eat all the things!!11~~", // optional, but encouraged!
   }
 
   return res.json(data)
@@ -19,30 +22,50 @@ router.post('/start', function (req, res) {
 // Handle POST request to '/move'
 router.post('/move', function (req, res) {
   // NOTE: Do something here to generate your move
-  function chooseRandomMove(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
+  //function chooseRandomMove(arr) {
+    //return arr[Math.floor(Math.random() * arr.length)];
+
+    // LOGIC COMES HERE - ARKADIS VERSION
+
+  function food_on_board(board) {
+  if (board.food.length >0) {
+    return true;
+  }
+  else
+    { return false;}
   }
 
-  // Response data
-  function shakespearianTaunt() {
-    var taunts = [
-      "Away, you starvelling, you elf-skin, you dried neat’s-tongue, bull’s-pizzle, you stock-fish!",
-      "Away, you three-inch fool!",
-      "The rankest compound of villainous smell that ever offended nostril",
-      "Thou cream faced loon",
-      "Thou leathern-jerkin, crystal-button, knot-pated, agatering, puke-stocking, caddis-garter, fork-tongue pouch!",
-      "Your brain is as dry as the remainder biscuit after voyage.",
-      "Would thou wert clean enough to spit upon"
-    ];
-    return taunts[Math.floor(Math.random() * taunts.length)];
+  var board = req.body;
+
+  console.log('making a move');
+  console.log('food present at ' + board.food)
+
+  // console.log('living snakes array' + req.body.snakes[0].taunt);
+
+  var grid;
+  var x = board.width;
+  var y = board.height;
+  for (i=0; i<x; i++) {
+    for (j=0; j<y; j++) {
+      grid[i][j]=0;
+    }
+  }
+
+  console.log(grid);
+
+  console.log('dimentions: ', x, ', ', y)
+
+  if (food_on_board(board)) {
+    console.log('food present, going for food');
   }
 
   var data = {
-    move: chooseRandomMove(['up','down','left','right']),
-    taunt: shakespearianTaunt()
+    // move: chooseRandomMove(['up','down','left','right']),
+    move: 'up', // options are up down left right
+    taunt: "eat all the things!!11~~",
   }
-
-  return res.json(data)
+  return res.json(data);
 })
 
-module.exports = router
+module.exports = router;
+
