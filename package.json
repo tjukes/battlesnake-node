@@ -18,7 +18,10 @@
     "nodemon": "^1.11.0"
   },
   "devDependencies": {
-    "foreman": "^2.0.0"
+    "foreman": "^2.0.0",
+    "jasmine": "^2.5.3",
+    "jasmine-core": "^2.5.2",
+    "uuid": "^3.0.1"
   },
   "main": "index.js",
   "engines": {
