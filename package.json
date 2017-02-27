@@ -18,6 +18,7 @@
     "nodemon": "^1.11.0"
   },
   "devDependencies": {
+    "documentation": "^4.0.0-beta.18",
     "foreman": "^2.0.0",
     "jasmine": "^2.5.3",
     "jasmine-core": "^2.5.2",
@@ -28,6 +29,8 @@
     "node": "6.x"
   },
   "scripts": {
-    "start": "nf start"
+    "start": "nf start",
+    "docs": "./node_modules/documentation/bin/documentation.js build ai/** -f md -o README.md documentation.yml",
+    "test": "jasmine"
   }
 }
