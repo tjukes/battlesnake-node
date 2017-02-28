@@ -37,27 +37,47 @@ router.post('/move', function(req, res) {
         var headX = me.coords[0][0];
         var headY = me.coords[0][1];
 
+        var tailX = me.coords[me.coords.length - 1][0];
+        var tailY = me.coords[me.coords.length - 1][1];
+
         board = new Board(data.height);
         board.addSnakes(data.snakes);
-        board.addFood(data.food);
 
-        var myPathsToFood = getPathsToFood(headX, headY, data);
-        var myFoodTargetIndex = getShortestPathIndex(myPathsToFood);
-        var myFoodPath = myPathsToFood[myFoodTargetIndex];
+        // there might not be food sometime..
+        board.addFood(data.food);
+        var myPathsToFood = getPathsToFood(headX, headY, data, tailX, tailY);
 
         console.log(board.grid);
         console.log('My Head @ ' + headX + ', ' + headY);
-        console.log('Heading to food @ ' + data.food[myFoodTargetIndex][0] + ', ' + data.food[myFoodTargetIndex][1]);
+        console.log(myPathsToFood);
+        if (myPathsToFood.length > 0) {
+            // if it can't find paths to food, maybe it will go to arkadi's algortim
+            ///filterOutPathsWithoutEscapeRoutes(myPathsToFood);
+            var myFoodTargetIndex = getShortestPathIndex(myPathsToFood);
+            var myFoodPath = myPathsToFood[myFoodTargetIndex];
 
-        myFoodPath.shift();
-        var nextCoord = myFoodPath.shift();
-        var theMove = directionBetweenCoords(headX, headY, nextCoord[0], nextCoord[1]);
+            // is there food?
+            console.log('Heading to food @ ' + data.food[myFoodTargetIndex][0] + ', ' + data.food[myFoodTargetIndex][1]);
+
+            myFoodPath.shift();
+            var nextCoordToFood = myFoodPath.shift();
+            var theMove = directionBetweenCoords(headX, headY, nextCoordToFood[0], nextCoordToFood[1]);
+        } else {
+            console.log('I HAVE NO PATH TO FOOD - I AM LOST');
+        }
 
         console.log('I think I will move ' + theMove);
         console.log('-------------------------------------------------');
 
-    } catch (e) {
-        console.log(e);
+    } catch (err) {
+        if (err.message) {
+            console.log('\nMessage: ' + err.message);
+        }
+        if (err.stack) {
+            console.log('\nStacktrace:');
+            console.log('====================');
+            console.log(err.stack);
+        }
     }
 
     var data = {
@@ -70,29 +90,42 @@ router.post('/move', function(req, res) {
 });
 
 
-function getPathsToFood(fromX, fromY, data) {
+function getPathsToFood(fromX, fromY, data, tailX, tailY) {
     var foodPaths = [];
-    data.food.forEach(function(food) {
+
+    for (food of data.food) {
         var x = food[0];
         var y = food[1];
         var pfgrid = new PF.Grid(board.grid);
         var finder = new PF.AStarFinder();
         var thisFoodPath = finder.findPath(fromX, fromY, x, y, pfgrid);
-        foodPaths.push(thisFoodPath);
-    });
+
+        // make sure theres a path to tail first
+        if (hasPath([x, y], [tailX, tailY]))
+            foodPaths.push(thisFoodPath);
+    }
     return foodPaths;
+}
+
+function hasPath(fromCoord, toCoord) {
+    var pfgrid = new PF.Grid(board.grid);
+    var finder = new PF.AStarFinder();
+    var thisFoodPath = finder.findPath(fromCoord[0], fromCoord[1], toCoord[0], toCoord[1], pfgrid);
 }
 
 function getShortestPathIndex(arrayOfPaths) {
     var shortestPath = 99999;
     var index = -1;
-    arrayOfPaths.forEach(function(path, i) {
+    var i = 0;
+    for (path of arrayOfPaths) {
+
         var len = path.length;
         if (len < shortestPath && len > 0) {
             shortestPath = len;
             index = i;
         }
-    });
+        i++;
+    }
     return index;
 }
 
@@ -127,11 +160,11 @@ function getRandomColor() {
 
 function findMySnake(data) {
     var mySnake;
-    data.snakes.forEach(function(snake) {
+    for (snake of data.snakes) {
         if (snake.id == data.you) {
             mySnake = snake;
         }
-    });
+    }
     return mySnake;
 }
 module.exports = router;
