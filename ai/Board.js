@@ -1,3 +1,5 @@
+'use strict';
+
 /** Class represents the board */
 class Board {
   /**
@@ -26,7 +28,13 @@ class Board {
         	}
     	}
 
+        console.log('hi');
+
     	addSnakes(this.snakes);
+
+        // is this working?
+        console.log(this.grid);
+        console.log('bye');
     	// addFood(this.food); // can be added later - 
     	// just need snakes to build walkability grid for pathfinder
   	}

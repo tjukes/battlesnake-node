@@ -1,8 +1,8 @@
 'use strict';
 
-var express = require('express')
-var router  = express.Router()
-var PF = require('pathfinding')
+var express = require('express');
+var router  = express.Router();
+var PF = require('pathfinding');
 var Board = require("../ai/Board.js");
 
 // Handle POST request to '/start'
@@ -29,17 +29,14 @@ router.post('/move', function (req, res) {
 
   console.log('making a move');
   console.log('food present at ' + board.food);
-  console.log('hi');
-
-  console.log(board);
-
+  
   var data = {
     // move: chooseRandomMove(['up','down','left','right']),
     move: 'up', // options are up down left right
     taunt: "eat all the things!!11~~",
   }
   return res.json(data);
-})
+});
 
 module.exports = router;
 
