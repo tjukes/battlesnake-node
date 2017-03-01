@@ -20,6 +20,7 @@
   "devDependencies": {
     "documentation": "^4.0.0-beta.18",
     "foreman": "^2.0.0",
+    "graph.js": "^1.21.1",
     "jasmine": "^2.5.3",
     "jasmine-core": "^2.5.2",
     "uuid": "^3.0.1"

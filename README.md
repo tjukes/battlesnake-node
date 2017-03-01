@@ -13,8 +13,10 @@
     -   [Getting started (from Sendwithus)](#getting-started-from-sendwithus)
     -   [Running the AI locally](#running-the-ai-locally)
 -   [API](#api)
+-   [simple](#simple)
 -   [Board](#board)
     -   [constructor](#constructor)
+    -   [createGraph](#creategraph)
 
 ## Snakespeare
 
@@ -83,6 +85,19 @@ Test the client in your browser: <http://localhost:5000>
 
 ## API
 
+## simple
+
+Weighting scheme will assign 1 to edges going out
+to vertices which are unoccupied
+
+**Parameters**
+
+-   `v1` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** from vertex
+-   `v2` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** to vertex
+-   `graph`  
+
+Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** weight
+
 ## Board
 
 Class represents the board
@@ -96,4 +111,16 @@ infered from the current state.
 
 **Parameters**
 
--   `body`  
+-   `body` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the body of the request
+
+### createGraph
+
+Creates a graph of the board.
+ See API of [Graph.js](https://www.npmjs.com/package/graph.js#Graph+toJSON)
+
+**Parameters**
+
+-   `grid` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)>** the grid of snakes
+-   `rule` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)?** default sets all edges to open vertices value 0) w/ edge weight 1, 0 otherwise (optional, default `simple`)
+
+Returns **Graph** 
