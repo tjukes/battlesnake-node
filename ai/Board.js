@@ -52,6 +52,7 @@ class Board {
  * and keep the game states and other useful useful information
  * infered from the current state.
  * @param {Object} body - the body of the request
+
  *
  */
   constructor(body) {
