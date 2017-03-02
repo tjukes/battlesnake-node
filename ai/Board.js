@@ -5,19 +5,25 @@ module.exports = class Board {
         this.size = size;
         this.snakes = [];
         this.food = [];
+        this.displayGrid = this.createGrid(size);
+
 
     }
     // find a path from a to b
     // handles the grid cloning and other things
     // (which the docs for pathfinding algorithm state is necessary)
-    pathFind(a, b) {
+    pathFind(a, b, pretendDestinationOpen = false) {
         var PF = require('pathfinding');
         var grid = this.cloneGrid();
 
         // NOTE: the coords a and b are zeroed on the grid before the search, if either are 1
         // the search algorithm wont work
         grid[a[1]][a[0]] = 0;
-        grid[b[1]][b[0]] = 0;
+
+        if (pretendDestinationOpen) {
+            grid[b[1]][b[0]] = 0;
+
+        }
 
         var pfgrid = new PF.Grid(grid);
         var finder = new PF.AStarFinder();
@@ -28,22 +34,23 @@ module.exports = class Board {
 
     // for now Im just considering a path to food valid if theres a path to tail from it.
     // being picky about what food we're eating..
-    getPathsToFood(fromCoord, tail) {
+    //fromCoord is head
+    getPathsToFood(head, tail) {
         var foodPaths = [];
 
         for (var food of this.food) {
             // make sure theres a path to tail first
-            var thisFoodPath = this.pathFind(fromCoord, food);
+            var thisFoodPath = this.pathFind(head, food, false);
             //console.log('path from food to tail? ');
-            if (this.hasPath(food, tail)) {
+            if (this.hasPath(food, tail, true)) {
                 foodPaths.push(thisFoodPath);
             }
         }
         return foodPaths;
     }
 
-    hasPath(fromCoord, toCoord) {
-        var path = this.pathFind(fromCoord, toCoord);
+    hasPath(fromCoord, toCoord, pretendDestinationOpen = false) {
+        var path = this.pathFind(fromCoord, toCoord, pretendDestinationOpen);
         return path.length > 0;
     }
 
@@ -108,8 +115,10 @@ module.exports = class Board {
                 x = snakeCoords[0];
                 y = snakeCoords[1];
                 this.grid[y][x] = 1;
+
             }
         }
+
     }
     // this function does nothing for now, but can be useful for debugging
     addFood(foods) {
@@ -118,6 +127,7 @@ module.exports = class Board {
             var x, y;
             x = food[0];
             y = food[1];
+            this.displayGrid = 'F';
             //this.grid[y][x] = 0;
         }
     };
