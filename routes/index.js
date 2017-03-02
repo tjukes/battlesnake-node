@@ -1,16 +1,11 @@
 'use strict';
 var express = require('express');
 var router = express.Router();
-var Board = require('../src/Board.js');
-var Snake = require('../src/Snake.js');
-var PF = require('pathfinding');
-
-// a few globals for now..
-var grid = [];
-var board;
-var reqBody = [];
+var Board = require('../ai/Board.js');
+var Snake = require('../ai/Snake.js');
 
 var numSnakes = 0;
+
 // Handle POST request to '/start'
 router.post('/start', function(req, res) {
 
@@ -25,36 +20,15 @@ router.post('/start', function(req, res) {
     return res.json(returnData);
 });
 
-
 /*
-
-
-
-top level ai:
-
-- eat or not eat?
-- be reclusive
-- be agressive
-
-- Find most open space to run to/ be reclusive in
-- Find somewhere to run to
-
-  Reclusion:
-  - walk in switchback formation
-  - chasing tail
-
-
-If I move here am I blocked in?:
- -- something about the amount of space inside hole vs size of me?
- -- aura alredy handles some choke points, but snake will still currently curl into itself searching for food
-
+NOTE: grid[y][x] not [x][y]
 
 */
 
 // Handle POST request to '/move'
 router.post('/move', function(req, res) {
 
-    reqBody = req.body;
+    var reqBody = req.body;
     try {
 
         var snake = new Snake(reqBody, reqBody.you);
@@ -63,7 +37,7 @@ router.post('/move', function(req, res) {
         var tail = snake.tail;
 
         // create a can't-go-there grid in board.grid
-        board = new Board(reqBody.height);
+        var board = new Board(reqBody.height);
 
         board.addSnakes(reqBody.snakes);
 
@@ -76,9 +50,6 @@ router.post('/move', function(req, res) {
         var myPathsToFood = board.getPathsToFood(head, tail);
 
         board.print();
-
-        //console.log('Paths to food:');
-        //console.log(myPathsToFood);
 
         console.log('My Head @ ' + head);
         console.log('My Tail @ ' + tail);
