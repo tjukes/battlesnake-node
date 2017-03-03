@@ -49,18 +49,33 @@ function simple(v1, v2, graph) {
     weight = 1
   }
   return weight;
+
+
+// scoped function, not exported
+function addSnakes(snakes, grid) {
+  for (var snake of snakes) {
+    for (var snakeCoords of snake.coords) {
+      var x, y;
+      x = snakeCoords[0];
+      y = snakeCoords[1];
+      grid[y][x] = 1;
+    }
+  }
 }
 
-
 module.exports = class Board {
-    constructor(size) {
-        this.grid = this.createGrid(size);
-        this.size = size;
-        this.snakes = [];
+    constructor(body) {
+        this.grid = this.createGrid(body.width, body.height);
+        this.snakesOnlyGrid = this.createGrid(body.width, body.height);
+        this.width = body.width;
+        this.height = body.height;
+        this.myID = body.you;   // our snake's ID
+        this.snakes = body.snakes;
         this.food = [];
-        this.displayGrid = this.createGrid(size);
+        this.displayGrid = this.createGrid(body.width, body.height);
 
-
+        addSnakes(this.snakes, this.grid);
+        addSnakes(this.snakes, this.snakesOnlyGrid);
     }
 
     /** Creates a graph of the board.
@@ -147,12 +162,12 @@ module.exports = class Board {
     }
 
 
-    createGrid(size) {
+    createGrid(width, height) {
         var grid = [];
-        for (var x = 0; x < size; x++) {
-            grid[x] = [];
-            for (var y = 0; y < size; y++) {
-                grid[x][y] = 0;
+        for (var y = 0; y < height; y++) {
+            grid[y] = [];
+            for (var x = 0; x < width; x++) {
+                grid[y][x] = 0;
             }
         }
         return grid;
@@ -186,19 +201,6 @@ module.exports = class Board {
         return newgrid;
     }
 
-    addSnakes(snakes) {
-        this.snakes = snakes;
-        for (var snake of snakes) {
-            for (var snakeCoords of snake.coords) {
-                var x, y;
-                x = snakeCoords[0];
-                y = snakeCoords[1];
-                this.grid[y][x] = 1;
-
-            }
-        }
-
-    }
     // this function does nothing for now, but can be useful for debugging
     addFood(foods) {
         this.food = foods;
