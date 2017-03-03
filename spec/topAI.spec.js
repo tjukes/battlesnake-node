@@ -43,9 +43,9 @@ describe("topAI", () => {
           "coords": [ [ 5, 0 ], [ 5, 0 ], [ 5, 0 ] ]
         }
       ]
-    }
-  })
+    };
+  });
   it("returns one of up, down, left, or right", () => {
-    expect(topAI(mockRequest)).toMatch(/up|down|left|right/)
-  })
-})
+    expect(topAI(mockRequest)).toMatch(/up|down|left|right/);
+  });
+});
