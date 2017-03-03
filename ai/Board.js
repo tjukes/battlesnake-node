@@ -19,6 +19,7 @@ module.exports = class Board {
         this.snakesOnlyGrid = this.createGrid(body.width, body.height);
         this.width = body.width;
         this.height = body.height;
+        this.myID = body.you;   // our snake's ID
         this.snakes = body.snakes;
         this.food = [];
         this.displayGrid = this.createGrid(body.width, body.height);
