@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 var Board = require('../ai/Board.js');
 var Snake = require('../ai/Snake.js');
@@ -78,4 +78,4 @@ module.exports = function getMyMove(reqBody) {
         }
     }
 
-}
+};

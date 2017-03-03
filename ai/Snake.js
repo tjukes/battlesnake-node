@@ -16,15 +16,15 @@ module.exports = class Snake {
         var me;
 
         //optionally can construct a clone from another snake
-        if(snake !== null) {
-          me = snake
+        if (snake !== null) {
+            me = snake;
         } else {
-          for (var snake of reqBody.snakes) {
-              if (snake.id == uuid) {
-                  me = snake;
-                  break;
-              }
-          }
+            for (var snake of reqBody.snakes) {
+                if (snake.id == uuid) {
+                    me = snake;
+                    break;
+                }
+            }
         }
 
 
@@ -58,36 +58,36 @@ module.exports = class Snake {
      * @returns {Snake} a clone having taken the move.
      */
     move(direction) {
-      var ghostSnake = this.clone()
-      ghostSnake.health_points--;
-      var nextCoord = []
-      if(direction === 'left') {
-        nextCoord[0] = ghostSnake.head[0] - 1;
-        nextCoord[1] = ghostSnake.head[1];
-        ghostSnake.coords.splice(0,0,nextCoord);
-        ghostSnake.coords.pop()
-      } else if(direction === 'right') {
-        nextCoord[0] = ghostSnake.head[0] + 1;
-        nextCoord[1] = ghostSnake.head[1];
-        ghostSnake.coords.splice(0,0,nextCoord);
-        ghostSnake.coords.pop()
-      } else if(direction === 'up') {
-        nextCoord[0] = ghostSnake.head[0];
-        nextCoord[1] = ghostSnake.head[1] - 1;
-        ghostSnake.coords.splice(0,0,nextCoord);
-        ghostSnake.coords.pop()
-      } else if(direction === 'down') {
-        nextCoord[0] = ghostSnake.head[0];
-        nextCoord[1] = ghostSnake.head[1] + 1;
-        ghostSnake.coords.splice(0,0,nextCoord);
-        ghostSnake.coords.pop()
-      } else {
-        throws("This is not a valid move", direction);
-      }
-      return ghostSnake;
+        var ghostSnake = this.clone();
+        ghostSnake.health_points--;
+        var nextCoord = [];
+        if (direction === 'left') {
+            nextCoord[0] = ghostSnake.head[0] - 1;
+            nextCoord[1] = ghostSnake.head[1];
+            ghostSnake.coords.splice(0, 0, nextCoord);
+            ghostSnake.coords.pop();
+        } else if (direction === 'right') {
+            nextCoord[0] = ghostSnake.head[0] + 1;
+            nextCoord[1] = ghostSnake.head[1];
+            ghostSnake.coords.splice(0, 0, nextCoord);
+            ghostSnake.coords.pop();
+        } else if (direction === 'up') {
+            nextCoord[0] = ghostSnake.head[0];
+            nextCoord[1] = ghostSnake.head[1] - 1;
+            ghostSnake.coords.splice(0, 0, nextCoord);
+            ghostSnake.coords.pop();
+        } else if (direction === 'down') {
+            nextCoord[0] = ghostSnake.head[0];
+            nextCoord[1] = ghostSnake.head[1] + 1;
+            ghostSnake.coords.splice(0, 0, nextCoord);
+            ghostSnake.coords.pop();
+        } else {
+            throws("This is not a valid move", direction);
+        }
+        return ghostSnake;
     }
 
     clone() {
-      return new Snake(null, null, this)
+        return new Snake(null, null, this);
     }
-}
+};

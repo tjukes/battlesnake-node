@@ -14,7 +14,7 @@ router.post('/start', function(req, res) {
         name: "SnakeSpeare",
         head_url: "../spearhead.png", // optional, but encouraged!
         taunt: "Come, come, you froward and unable worms!", // optional, but encouraged!
-    }
+    };
     return res.json(returnData);
 });
 

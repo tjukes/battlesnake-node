@@ -14,4 +14,4 @@ module.exports = class Snake {
         this.tail = [me.coords[me.coords.length - 1][0], me.coords[me.coords.length - 1][1]];;
         this.head = [me.coords[0][0], me.coords[0][1]];
     }
-}
+};
