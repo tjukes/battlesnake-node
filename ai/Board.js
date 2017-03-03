@@ -1,4 +1,18 @@
 'use strict';
+
+// scoped function, not exported
+function addSnakes(snakes, grid) {
+    for (var snake of snakes) {
+        for (var snakeCoords of snake.coords) {
+            var x, y;
+            x = snakeCoords[0];
+            y = snakeCoords[1];
+            grid[y][x] = 1;
+        }
+    }
+}
+
+
 module.exports = class Board {
     constructor(body) {
         this.grid = this.createGrid(body.width, body.height);
@@ -9,7 +23,8 @@ module.exports = class Board {
         this.food = [];
         this.displayGrid = this.createGrid(body.width, body.height);
 
-
+        addSnakes(this.snakes, this.grid);
+        addSnakes(this.snakes, this.snakesOnlyGrid);
     }
     // find a path from a to b
     // handles the grid cloning and other things
@@ -109,17 +124,6 @@ module.exports = class Board {
         return newgrid;
     }
 
-    addSnakes(snakes) {
-        for (var snake of snakes) {
-            for (var snakeCoords of snake.coords) {
-                var x, y;
-                x = snakeCoords[0];
-                y = snakeCoords[1];
-                this.grid[y][x] = 1;
-                this.snakesOnlyGrid[y][x] = 1;
-            }
-        }
-    }
     // this function does nothing for now, but can be useful for debugging
     addFood(foods) {
         this.food = foods;

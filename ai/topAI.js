@@ -14,8 +14,6 @@ module.exports = function getMyMove(reqBody) {
         // create a can't-go-there grid in board.grid
         var board = new Board(reqBody);
 
-        board.addSnakes(reqBody.snakes);
-
         // this doesnt do anything
         board.addFood(reqBody.food);
 
