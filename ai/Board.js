@@ -2,6 +2,7 @@
 module.exports = class Board {
     constructor(width, height) {
         this.grid = this.createGrid(width, height);
+        this.snakesOnlyGrid = this.createGrid(width, height);
         this.width = width;
         this.height = height;
         this.snakes = [];
@@ -116,10 +117,9 @@ module.exports = class Board {
                 x = snakeCoords[0];
                 y = snakeCoords[1];
                 this.grid[y][x] = 1;
-
+                this.snakesOnlyGrid[y][x] = 1;
             }
         }
-
     }
     // this function does nothing for now, but can be useful for debugging
     addFood(foods) {
