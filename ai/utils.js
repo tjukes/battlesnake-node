@@ -1,22 +1,6 @@
 PF = require("pathfinding")
 
-//Snake = require("./Snake.js")
-class Snake {
-
-    constructor(reqBody, uuid) {
-        var me;
-
-        for (var snake of reqBody.snakes) {
-            if (snake.id == uuid) {
-                me = snake;
-                break;
-            }
-        }
-
-        this.tail = [me.coords[me.coords.length - 1][0], me.coords[me.coords.length - 1][1]];;
-        this.head = [me.coords[0][0], me.coords[0][1]];
-    }
-}
+Snake = require("./Snake.js")
 
 /**
  * Looks for set of cells that are or distance n from the head
