@@ -1,11 +1,12 @@
 'use strict';
 module.exports = class Board {
-    constructor(size) {
-        this.grid = this.createGrid(size);
-        this.size = size;
+    constructor(width, height) {
+        this.grid = this.createGrid(width, height);
+        this.width = width;
+        this.height = height;
         this.snakes = [];
         this.food = [];
-        this.displayGrid = this.createGrid(size);
+        this.displayGrid = this.createGrid(width, height);
 
 
     }
@@ -68,12 +69,12 @@ module.exports = class Board {
     }
 
 
-    createGrid(size) {
+    createGrid(width, height) {
         var grid = [];
-        for (var x = 0; x < size; x++) {
-            grid[x] = [];
-            for (var y = 0; y < size; y++) {
-                grid[x][y] = 0;
+        for (var y = 0; y < height; y++) {
+            grid[y] = [];
+            for (var x = 0; x < width; x++) {
+                grid[y][x] = 0;
             }
         }
         return grid;

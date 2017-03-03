@@ -12,7 +12,7 @@ module.exports = function getMyMove(reqBody) {
         var tail = snake.tail;
 
         // create a can't-go-there grid in board.grid
-        var board = new Board(reqBody.height);
+        var board = new Board(reqBody.width, reqBody.height);
 
         board.addSnakes(reqBody.snakes);
 
