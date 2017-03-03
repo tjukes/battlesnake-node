@@ -1,0 +1,6 @@
+toc:
+  - name: Snakespeare
+    file: README_snakespeare.md
+  - name: Docs from starter-snake
+    file: README_battlesnake_node.md
+  - name: API
