@@ -1,5 +1,8 @@
 'use strict';
+var PF = require('pathfinding');
+
 module.exports = class Board {
+    // TODO: make a nicer display this.displayGrid
     constructor(size) {
         this.grid = this.createGrid(size);
         this.size = size;
@@ -9,25 +12,26 @@ module.exports = class Board {
 
 
     }
-    // find a path from a to b
-    // handles the grid cloning and other things
-    // (which the docs for pathfinding algorithm state is necessary)
-    pathFind(a, b, pretendDestinationOpen = false) {
-        var PF = require('pathfinding');
+    /* find a path from a to b
+       handles the grid cloning and other things
+       (which the docs for pathfinding algorithm state is necessary)
+
+       NOTE: if destination is a 1 on the grid, there are no paths.
+       that is why it sets the partOfASnake to 0 in the cloned grid
+    */
+
+    pathFind(partOfASnake, destination, pretendDestinationOpen = false) {
+
         var grid = this.cloneGrid();
 
         // NOTE: the coords a and b are zeroed on the grid before the search, if either are 1
         // the search algorithm wont work
-        grid[a[1]][a[0]] = 0;
 
-        if (pretendDestinationOpen) {
-            grid[b[1]][b[0]] = 0;
-
-        }
+        grid[partOfASnake[1]][partOfASnake[0]] = 0;
 
         var pfgrid = new PF.Grid(grid);
         var finder = new PF.AStarFinder();
-        var path = finder.findPath(a[0], a[1], b[0], b[1], pfgrid);
+        var path = finder.findPath(partOfASnake[0], partOfASnake[1], destination[0], destination[1], pfgrid);
 
         return path;
     }
@@ -39,18 +43,21 @@ module.exports = class Board {
         var foodPaths = [];
 
         for (var food of this.food) {
-            // make sure theres a path to tail first
+            //
             var thisFoodPath = this.pathFind(head, food, false);
             //console.log('path from food to tail? ');
-            if (this.hasPath(food, tail, true)) {
+            if (this.hasPath(tail, food, true)) {
                 foodPaths.push(thisFoodPath);
             }
         }
         return foodPaths;
     }
-
-    hasPath(fromCoord, toCoord, pretendDestinationOpen = false) {
-        var path = this.pathFind(fromCoord, toCoord, pretendDestinationOpen);
+    /*
+      If you want to find route to a point that might be a 1 on the grid,
+      you need to pretend that it's a 0 or  the pathfinder won't work
+    */
+    hasPath(fromCoord, toCoord) {
+        var path = this.pathFind(fromCoord, toCoord);
         return path.length > 0;
     }
 
@@ -67,7 +74,7 @@ module.exports = class Board {
         }
     }
 
-
+    // zeroes a grid  (2d array of 0's,1's) of size sizexsize
     createGrid(size) {
         var grid = [];
         for (var x = 0; x < size; x++) {
@@ -78,16 +85,16 @@ module.exports = class Board {
         }
         return grid;
     }
-
+    // check if a coordinate is open on the grid
     gridOpen(coord) {
         this.grid[coord[1]][coord[0]] == 0;
     }
 
-    // puts a '1' at a coordinate on the grid
+    // puts a '1' at a coordinate on the PF grid
     gridBlock(coord) {
         this.grid[coord[1]][coord[0]] = 1;
     }
-
+    // checks for a 0 on the PF grid at a coordinate [x,y]
     isGridOpen(coord) {
         return this.grid[coord[1]][coord[0]] == 0;
     }
@@ -106,7 +113,7 @@ module.exports = class Board {
         }
         return newgrid;
     }
-
+    // adds the snakes coordinates to the PF grid
     addSnakes(snakes) {
         this.snakes = snakes;
         for (var snake of snakes) {
@@ -131,7 +138,7 @@ module.exports = class Board {
             //this.grid[y][x] = 0;
         }
     };
-
+    // checks is a coordinate [x,y] is in bounds
     isInBounds(coord) {
         var x = coord[0];
         var y = coord[1];
@@ -191,9 +198,8 @@ module.exports = class Board {
     }
 
 
-    // example of fromCoord/toCoord is array [19,19]
-    // so for this function, we are going to set the source & destination to 0 on the temp grid,
-    // otherwise there for sure wont be a path
+    // example of cordinate is  [19,19]
+    // finds smallest (except 0 length) array in a 2d array
     getShortestPathIndex(arrayOfPaths) {
         var shortestPath = 99999;
         var index = -1;
@@ -210,7 +216,7 @@ module.exports = class Board {
         return index;
     }
 
-
+    // describes the direction 
     // only works if a move apart
     // eg 1,1 , 1,2
     directionBetweenCoords(coord1, coord2) {
