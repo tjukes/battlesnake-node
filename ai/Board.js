@@ -5,7 +5,7 @@ module.exports = class Board {
         this.snakesOnlyGrid = this.createGrid(body.width, body.height);
         this.width = body.width;
         this.height = body.height;
-        this.snakes = [];
+        this.snakes = body.snakes;
         this.food = [];
         this.displayGrid = this.createGrid(body.width, body.height);
 
@@ -110,7 +110,6 @@ module.exports = class Board {
     }
 
     addSnakes(snakes) {
-        this.snakes = snakes;
         for (var snake of snakes) {
             for (var snakeCoords of snake.coords) {
                 var x, y;
