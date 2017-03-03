@@ -3,7 +3,9 @@
 var express = require('express');
 var router  = express.Router();
 var PF = require('pathfinding');
-var Board = require("../ai/Board.js");
+var Board = require('../ai/Board.js');
+var arkFoodFinder = require('../ai/arkFoodFinder.js');
+
 
 // Handle POST request to '/start'
 router.post('/start', function (req, res) {
@@ -32,6 +34,8 @@ router.post('/move', function (req, res) {
     console.log('making a move');
     console.log('food present at ' + board.food);
     console.log(board.grid);
+
+    var findFoodMove = foodFinderAI(board);
   } catch(e) {
     console.log(e.message);
     
@@ -41,7 +45,7 @@ router.post('/move', function (req, res) {
   
   var data = {
     // move: chooseRandomMove(['up','down','left','right']),
-    move: 'up', // options are up down left right
+    move: findFoodMove, // options are up down left right
     taunt: "eat all the things!!11~~",
   };
   return res.json(data);
