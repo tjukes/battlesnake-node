@@ -1,13 +1,13 @@
 'use strict';
 module.exports = class Board {
-    constructor(width, height) {
-        this.grid = this.createGrid(width, height);
-        this.snakesOnlyGrid = this.createGrid(width, height);
-        this.width = width;
-        this.height = height;
+    constructor(body) {
+        this.grid = this.createGrid(body.width, body.height);
+        this.snakesOnlyGrid = this.createGrid(body.width, body.height);
+        this.width = body.width;
+        this.height = body.height;
         this.snakes = [];
         this.food = [];
-        this.displayGrid = this.createGrid(width, height);
+        this.displayGrid = this.createGrid(body.width, body.height);
 
 
     }
