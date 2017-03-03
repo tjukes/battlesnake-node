@@ -17,6 +17,10 @@
 -   [Board](#board)
     -   [constructor](#constructor)
     -   [createGraph](#creategraph)
+-   [\_equiDistant](#_equidistant)
+-   [equiDistantFromHead](#equidistantfromhead)
+-   [getNeighboursIndex](#getneighboursindex)
+-   [taxiDistance](#taxidistance)
 
 ## Snakespeare
 
@@ -92,8 +96,8 @@ to vertices which are unoccupied
 
 **Parameters**
 
--   `v1` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** from vertex
--   `v2` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** to vertex
+-   `v1` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** edge starts at this vertex
+-   `v2` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** edge goes to this vertex
 -   `graph`  
 
 Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** weight
@@ -121,6 +125,105 @@ Creates a graph of the board.
 **Parameters**
 
 -   `grid` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)>** the grid of snakes
--   `rule` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)?** default sets all edges to open vertices value 0) w/ edge weight 1, 0 otherwise (optional, default `simple`)
+-   `rule` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)?** This is how we assign weights to edges between the cells of the board.
+    default sets all edges to open vertices value 0) w/ edge weight 1, 0 otherwise (optional, default `simple`)
 
 Returns **Graph** 
+
+## \_equiDistant
+
+Looks for set of cells that are or distance n from the head
+Disregards all other snakes on board.  Might return negative indices.
+
+**Parameters**
+
+-   `head`  
+-   `distance`  
+-   `height`  
+-   `width`  
+
+## equiDistantFromHead
+
+Looks for set of cells that are or distance n from the head
+Disregards all other snakes on board.  Doesn't return negative indices.
+
+**Parameters**
+
+-   `head`  
+-   `distance`  
+-   `height`  
+-   `width`  
+
+## searchBoard
+
+Search
+First search all of moves keeping other snakes fixed.  Can go deeper
+Then choose closest head, and if it is within the search depth\*2,
+ and search all combinations of all snakes heads
+mark all paths that give death as negative score
+
+## searchHeads
+
+Takes at where other snake's heads might be in the short term.
+
+**Parameters**
+
+-   `Board` **[Board](#board)** 
+-   `turns` **integer** how many turns to look at into the future.
+    Keep in mind that we shouldn't look too far, because this is O(3^n).  Eek!
+-   `reqBody`  
+-   `board`  
+
+## checkMate
+
+Check if next move could result in checkmate.
+
+## dijkstra
+
+Find shortest path by dijkstra's algorithm given changing graph values
+
+**Parameters**
+
+-   `startVertex` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;integer>** , [l,m]
+-   `endVertex` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;integer>** 
+-   `graph` **Graph** 
+-   `board`  
+
+## aStar
+
+Finds shortests path, faster normally the dijkstra's algorithm
+
+**Parameters**
+
+-   `graph` **Graph** 
+-   `startVertex` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;integer>** 
+-   `endVertex` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;integer>** 
+
+## getNeighboursIndex
+
+Returns an object with values indices[l,m] of neighbours
+that aren't other snakes
+
+**Parameters**
+
+-   `i` **integer** row index
+-   `j` **integer** col index
+-   `grid` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)>** 
+
+## checkTailGrowth
+
+Keeps track of when another snake eats, and
+if planning on going into last element of tail, abort!
+
+**Parameters**
+
+-   `board` **[Board](#board)** 
+
+## taxiDistance
+
+Calculates taxi-car distance between two points
+
+**Parameters**
+
+-   `startVertex`  
+-   `endVertex`  

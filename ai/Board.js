@@ -1,4 +1,9 @@
 var Graph = require('graph.js/dist/graph.full.js');
+var _ = require('underscore');
+
+//This loads all utility functions into the global namespace
+//Might not want this eventually
+_(global).extend(require('./utils'))
 
 function addEdges(i, j, grid, graph, weight) {
   var keys = '';
