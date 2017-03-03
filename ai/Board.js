@@ -5,33 +5,33 @@ var _ = require('underscore');
 
 //This loads all utility functions into the global namespace
 //Might not want this eventually
-_(global).extend(require('./utils'))
+_(global).extend(require('./utils'));
 
 function addEdges(i, j, grid, graph, weight) {
   var keys = '';
   if (i > 0) {
-    keys = [[i-1,j]+'', [i,j]+'']
-    graph.addEdge(...keys, weight(...keys, graph))
-    keys = [[i,j]+'', [i-1,j]+'']
-    graph.addEdge(...keys, weight(...keys, graph))
+    keys = [[i-1,j]+'', [i,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+    keys = [[i,j]+'', [i-1,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
   }
   if (i < grid.width) {
-    keys = [[i+1,j]+'', [i,j]+'']
-    graph.addEdge(...keys, weight(...keys, graph))
-    keys = [[i,j]+'', [i+1,j]+'']
-    graph.addEdge(...keys, weight(...keys, graph))
+    keys = [[i+1,j]+'', [i,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+    keys = [[i,j]+'', [i+1,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
   }
   if (j > 0) {
-    keys = [[i,j-1]+'', [i,j]+'']
-    graph.addEdge(...keys, weight(...keys, graph))
-    keys = [[i,j]+'', [i,j-1]+'']
-    graph.addEdge(...keys, weight(...keys, graph))
+    keys = [[i,j-1]+'', [i,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+    keys = [[i,j]+'', [i,j-1]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
   }
   if (j < grid.height) {
-    keys = [[i,j+1]+'', [i,j]+'']
-    graph.addEdge(...keys, weight(...keys, graph))
-    keys - [[i,j]+'', [i+1,j]+'']
-    graph.addEdge(...keys, weight(...keys, graph))
+    keys = [[i,j+1]+'', [i,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+    keys - [[i,j]+'', [i+1,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
   }
 
 }
@@ -45,11 +45,11 @@ function addEdges(i, j, grid, graph, weight) {
   */
 function simple(v1, v2, graph) {
   var weight = 0;
-  if(graph.vertexValue(v2) == 0) {
-    weight = 1
+  if(graph.vertexValue(v2) === 0) {
+    weight = 1;
   }
   return weight;
-
+}
 
 // scoped function, not exported
 function addSnakes(snakes, grid) {
@@ -87,17 +87,17 @@ module.exports = class Board {
      * @returns {Graph}
      */
     createGraph(grid, rule = simple) {
-      var graph = new Graph()
+      var graph = new Graph();
       //First, initialize all vertices b/c don't want to overwrite them
       grid.forEach((row, i) => {
         row.forEach((val, j) => {
-          graph.addVertex([i,j]+'', val)
+          graph.addVertex([i,j]+'', val);
         });
       });
 
       grid.forEach((row, rowIndex) => {
         row.forEach((val, colIndex) => {
-          addEdges(rowIndex, colIndex, grid, graph, simple)
+          addEdges(rowIndex, colIndex, grid, graph, simple);
         });
       });
       return graph;
@@ -174,7 +174,7 @@ module.exports = class Board {
     }
 
     gridOpen(coord) {
-        this.grid[coord[1]][coord[0]] == 0;
+        this.grid[coord[1]][coord[0]] = 0;
     }
 
     // puts a '1' at a coordinate on the grid
@@ -183,7 +183,7 @@ module.exports = class Board {
     }
 
     isGridOpen(coord) {
-        return this.grid[coord[1]][coord[0]] == 0;
+        return this.grid[coord[1]][coord[0]] === 0;
     }
 
 
@@ -211,7 +211,7 @@ module.exports = class Board {
             this.displayGrid = 'F';
             //this.grid[y][x] = 0;
         }
-    };
+    }
 
     isInBounds(coord) {
         var x = coord[0];
@@ -255,11 +255,11 @@ module.exports = class Board {
     getRandomFreeNeighbor(coord) {
         var neighbors = this.getNeighborCoords(coord);
         var result;
-        if (neighbors.length == 0) {
+        if (neighbors.length === 0) {
             return -1; // no neighbors :(
         }
 
-        for (var coord of neighbors) {
+        for (var coordinate of neighbors) {
             if (this.isGridOpen(coord)) {
                 result = coord;
                 break;
@@ -353,13 +353,5 @@ module.exports = class Board {
 
     print() {
         console.log(this.grid);
-        /*
-    for (var y = 0; y < this.size; y++) {
-    var row = [];
-    for (var x = 0; x < this.size; x++) {
-    row.push(this.grid[x][y]);
-  }
-  console.log(row);
-}*/
     }
 };
