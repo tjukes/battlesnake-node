@@ -3,15 +3,9 @@ _ = require('underscore');
 
 describe("Board", () => {
   var testBoard;
-  var testGrid = [
-      [0,1,0,0,0],
-      [0,1,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,1,1],
-      [0,0,0,0,0]
-    ]
+  var testBody = {width: 5, height: 5, snakes: []};
   beforeEach(() => {
-    testBoard = new Board(testGrid);
+    testBoard = new Board(testBody);
   })
 
   it("creates a graph", () => {
