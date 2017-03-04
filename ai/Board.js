@@ -76,6 +76,8 @@ module.exports = class Board {
 
         addSnakes(this.snakes, this.grid);
         addSnakes(this.snakes, this.snakesOnlyGrid);
+        Object.freeze(this.snakesOnlyGrid);
+        this.snakesOnlyGrid.forEach((row) => Object.freeze(row));
     }
 
     /** Creates a graph of the board.
