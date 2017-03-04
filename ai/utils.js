@@ -231,6 +231,29 @@ function getNeighborCoords(coord, simpleGrid) {
     return neighbors;
 }
 
+/**
+* Get a random open coordinate that can be moved to
+* @param {Array} coord - the coordinate to start from
+* @param {Array<Array>} simpleGrid - the grid to check against
+* TODO : if other snake head is a target, take the 1 off it on grid
+* given a coord, returns array of neighbors that are walkable
+*/
+function getRandomFreeNeighbor(coord, grid) {
+  var neighbors = getNeighborCoords(coord, grid);
+  var freeNeighbors = [];
+
+  for (var coordinate of neighbors) {
+    if (isCoordOpen(coordinate, grid)) {
+      freeNeighbors.push(coordinate);
+    }
+  }
+
+  if (freeNeighbors.length === 0) {
+    return -1; // no neighbors :(
+  }
+
+  return freeNeighbors[Math.floor(Math.random() * freeNeighbors.length)];
+}
 
 module.exports = {
   equiDistantFromHead,
@@ -239,5 +262,6 @@ module.exports = {
   coordFromDirection,
   isInBounds,
   isCoordOpen,
-  getNeighborCoords
+  getNeighborCoords,
+  getRandomFreeNeighbor
 };
