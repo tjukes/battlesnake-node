@@ -3,24 +3,18 @@ _ = require('underscore');
 
 describe("Board", () => {
   var testBoard;
-  var testGrid = [
-      [0,1,0,0,0],
-      [0,1,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,1,1],
-      [0,0,0,0,0]
-    ]
+  var testBody = {width: 5, height: 5, snakes: []};
   beforeEach(() => {
-    testBoard = new Board(testGrid);
-  })
+    testBoard = new Board(testBody);
+  });
 
   it("creates a graph", () => {
-    var graph = testBoard.createGraph([[0,1],[0,0]])
+    var graph = testBoard.createGraph([[0,1],[0,0]]);
     var graphArray = [
       ["0,0", 0],["0,1", 1], ["1,0", 0], ["1,1", 0],
       [["0,0", "0,1"], 0], [["0,1", "0,0"], 1], [["0,0", "1,0"], 1], [["1,0", "0,0"], 1],
       [["1,1", "1,0"], 1], [["1,0", "1,1"], 1], [["1,1", "0,1"], 0], [["0,1", "1,1"], 1]
-    ]
-    expect(JSON.parse(graph.toJSON()).sort()).toEqual(graphArray.sort())
-  })
-})
+    ];
+    expect(JSON.parse(graph.toJSON()).sort()).toEqual(graphArray.sort());
+  });
+});
