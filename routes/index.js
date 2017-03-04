@@ -3,7 +3,10 @@ var express = require('express');
 var router = express.Router();
 var getMyMove = require('../ai/topAI.js');
 var numSnakes = 0;
-
+var previousReqBody;
+var previousPreviousReqBody;
+// 2d array handling game history up till now
+var reqBodyHistories = [];
 // Handle POST request to '/start'
 router.post('/start', function(req, res) {
 
@@ -12,22 +15,70 @@ router.post('/start', function(req, res) {
     var returnData = {
         color: "#DFFF00",
         name: "SnakeSpeare",
-        head_url: "../spearhead.png", // optional, but encouraged!
+        //head_url: "../spearhead.png", // optional, but encouraged!
         taunt: "Come, come, you froward and unable worms!", // optional, but encouraged!
-    }
+    };
     return res.json(returnData);
 });
 
 // Handle POST request to '/move'
 router.post('/move', function(req, res) {
+    try {
+        //console.log(req.body);
+        var reqBodyHistory = updateAndGetHistory(req.body);
+        console.log('Found game history with :' + reqBodyHistory.length + ' moves.');
+        console.log(req.body.turn);
+        var responseData = {
+            move: getMyMove(req.body, reqBodyHistory), // one of: ['up','down','left','right']
+            taunt: shakespearianTaunt(), // optional, but encouraged!
+        };
+        return res.json(responseData);
 
-    var responseData = {
-        move: getMyMove(req.body), // one of: ['up','down','left','right']
-        taunt: shakespearianTaunt(), // optional, but encouraged!
-    };
+    } catch (err) {
+        if (err.message) {
+            console.log('\nMessage: ' + err.message);
+        }
+        if (err.stack) {
+            console.log('\nStacktrace:');
+            console.log('====================');
+            console.log(err.stack);
+        }
+    }
 
-    return res.json(responseData);
+
 });
+
+// adds the current req.body to the appropriate game history
+// returns the entire history for this game, with history[0] being
+// the first req.body
+function updateAndGetHistory(reqBody) {
+    // game id doesnt change when you press 'q' to reset game. so if turn is 0, reset this game
+    var turn = reqBody.turn;
+    var gameID = reqBody.game_id;
+
+    var i = 0;
+    for (var reqBodyHistory of reqBodyHistories) {
+        if (reqBodyHistory[0].game_id == gameID) {
+            console.log('FOUND GAME ARRAY AT ' + i);
+            break;
+        }
+        i++;
+    }
+    if (i == reqBodyHistories.length) {
+        // if this game not yet in histories - add it
+        console.log('ADDING GAME ');
+        // begin a new game history
+        reqBodyHistories.push([]);
+        // set game history index to newest addition
+        i = reqBodyHistories.length - 1;
+    }
+    // if turn is 0, reset this game.
+    if (turn == 0) {
+        reqBodyHistories[i] = [];
+    }
+    reqBodyHistories[i].push(reqBody);
+    return reqBodyHistories[i];
+}
 
 function shakespearianTaunt() {
     var taunts = [
