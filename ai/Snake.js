@@ -88,6 +88,7 @@ module.exports = class Snake {
 
     clone() {
         return new Snake(null, null, this);
+
     }
 
 
