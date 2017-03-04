@@ -127,13 +127,12 @@ module.exports = class Board {
     // handles the grid cloning and other things
     // (which the docs for pathfinding algorithm state is necessary)
     pathFind(a, b) {
-        console.log('trying to pathfind from ' + a + ' to ' + b);
         var grid = this.cloneGrid();
 
         // NOTE: the destination is zeroed on grid before the search, if either are 1
         // the search algorithm wont work
 
-        grid[a[1]][b[0]] = 0;
+        grid[b[1]][b[0]] = 0;
 
         var pfgrid = new PF.Grid(grid);
         var finder = new PF.AStarFinder(pfgrid);
@@ -151,7 +150,7 @@ module.exports = class Board {
         for (var food of this.food) {
             //
             var thisFoodPath = this.pathFind(head, food);
-            //console.log('path from food to tail? ');
+
             if (this.hasPath(tail, food) && thisFoodPath.length > 0) {
                 foodPaths.push(thisFoodPath);
             }

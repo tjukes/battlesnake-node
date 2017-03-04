@@ -107,7 +107,7 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     if (conditionsRightForTailChasing ||
         (!conditionsRightForTailChasing && !wehaveAPathToFood)) {
         console.log('I will chase my tail.');
-        return chaseTail(board, snake, lastDifferentTail);
+        myMove = chaseTail(board, snake, lastDifferentTail);
     }
 
     if (wehaveAPathToFood) {
@@ -142,7 +142,5 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     console.log('-------------------------------------------------');
 
     return myMove;
-
-
 
 };
