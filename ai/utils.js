@@ -205,11 +205,39 @@ function isCoordOpen(coord, simpleGrid) {
   return simpleGrid[coord[1]][coord[0]] === 0;
 }
 
+// given a coord ([x,y]), returns an array of neighboring coordinates
+// that aren't out of bounds
+function getNeighborCoords(coord, simpleGrid) {
+    var neighbors = [];
+    var x = coord[0];
+    var y = coord[1];
+
+    if (isInBounds([x + 1, y], simpleGrid)) {
+        neighbors.push([x + 1, y]);
+    }
+
+    if (isInBounds([x, y + 1], simpleGrid)) {
+        neighbors.push([x, y + 1]);
+    }
+
+    if (isInBounds([x - 1, y], simpleGrid)) {
+        neighbors.push([x - 1, y]);
+    }
+
+    if (isInBounds([x, y - 1], simpleGrid)) {
+        neighbors.push([x, y - 1]);
+    }
+
+    return neighbors;
+}
+
+
 module.exports = {
   equiDistantFromHead,
   _equiDistant,
   getNeighboursIndex,
   coordFromDirection,
   isInBounds,
-  isCoordOpen
+  isCoordOpen,
+  getNeighborCoords
 };
