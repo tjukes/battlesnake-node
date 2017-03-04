@@ -34,3 +34,6 @@ node_modules
 npm-debug.log
 
 /.project
+
+# Linter config - let everyone use their own
+.jshintrc
