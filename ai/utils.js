@@ -196,10 +196,20 @@ function isInBounds(coord, simpleGrid) {
     (y >= 0 && y < simpleGrid.length);
 }
 
+/**
+* Check to see if a coord is walkable (0)
+* @param {Array} coord - The coordinate to check: [x,y]
+* @param {Array<Array>} simpleGrid - the grid to check against
+*/
+function isCoordOpen(coord, simpleGrid) {
+  return simpleGrid[coord[1]][coord[0]] === 0;
+}
+
 module.exports = {
   equiDistantFromHead,
   _equiDistant,
   getNeighboursIndex,
   coordFromDirection,
-  isInBounds
+  isInBounds,
+  isCoordOpen
 };
