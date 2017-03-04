@@ -182,10 +182,24 @@ function coordFromDirection(direction, startingCoord) {
   return destination;
 }
 
+/**
+* Check if a given coordinate is on the grid
+* NOTE grid must have no extra information on it
+* (must be [[0,0,0], [0,0,0], [0,0,0]] for a 3x3 grid)
+* @param {Array} coord - the coordinate to check, [x,y]
+* @param {Array<Array>} simpleGrid - the grid to check against
+*/
+function isInBounds(coord, simpleGrid) {
+  var x = coord[0];
+  var y = coord[1];
+  return (x >= 0 && x < simpleGrid[0].length) &&
+    (y >= 0 && y < simpleGrid.length);
+}
 
 module.exports = {
   equiDistantFromHead,
   _equiDistant,
   getNeighboursIndex,
-  coordFromDirection
+  coordFromDirection,
+  isInBounds
 };
