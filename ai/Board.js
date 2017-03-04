@@ -9,8 +9,6 @@ module.exports = class Board {
         this.snakes = [];
         this.food = [];
         this.displayGrid = this.createGrid(size);
-
-
     }
     /* find a path from a to b
        handles the grid cloning and other things
@@ -20,11 +18,11 @@ module.exports = class Board {
        that is why it sets the partOfASnake to 0 in the cloned grid
     */
 
-    pathFind(partOfASnake, destination, pretendDestinationOpen = false) {
+    pathFind(partOfASnake, destination) {
 
         var grid = this.cloneGrid();
 
-        // NOTE: the coords a and b are zeroed on the grid before the search, if either are 1
+        // NOTE: the destination is zeroed on grid before the search, if either are 1
         // the search algorithm wont work
 
         grid[partOfASnake[1]][partOfASnake[0]] = 0;
@@ -44,23 +42,22 @@ module.exports = class Board {
 
         for (var food of this.food) {
             //
-            var thisFoodPath = this.pathFind(head, food, false);
+            var thisFoodPath = this.pathFind(head, food);
             //console.log('path from food to tail? ');
-            if (this.hasPath(tail, food, true)) {
+            if (this.hasPath(tail, food) && thisFoodPath.length > 0) {
                 foodPaths.push(thisFoodPath);
             }
         }
         return foodPaths;
     }
     /*
-      If you want to find route to a point that might be a 1 on the grid,
-      you need to pretend that it's a 0 or  the pathfinder won't work
+      I call it snakePartCoord because the algorithm will temporarilty set a 0 on
+      it's coordinate so it can pathfind. cant pathfind if it's set to 1
     */
-    hasPath(fromCoord, toCoord) {
-        var path = this.pathFind(fromCoord, toCoord);
+    hasPath(snakePartCoord, toCoord) {
+        var path = this.pathFind(snakePartCoord, toCoord);
         return path.length > 0;
     }
-
     // adds an aura to other snake heads - what else is there to say?
     // could try only adding the aura around heads of larger snakes than us,
     // but this way it helps with choke points too
@@ -96,6 +93,7 @@ module.exports = class Board {
     }
     // checks for a 0 on the PF grid at a coordinate [x,y]
     isGridOpen(coord) {
+
         return this.grid[coord[1]][coord[0]] == 0;
     }
 
@@ -216,7 +214,7 @@ module.exports = class Board {
         return index;
     }
 
-    // describes the direction 
+    // describes the direction
     // only works if a move apart
     // eg 1,1 , 1,2
     directionBetweenCoords(coord1, coord2) {
