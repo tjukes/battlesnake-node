@@ -31,9 +31,14 @@ module.exports = class Snake {
         // Want to clone everything so they can be modified
         // to explore future moves w/out overwriting
         // board/previous snakes's values
-        this.uuid = me.uuid;
+
+        this.uuid = me.uuid || me.id;
+        this.id = me.uuid || me.id;
         this.health_points = me.health_points;
         this.coords = me.coords.map(_.clone);
+        this.taunt = me.taunt;
+        this.name = me.name;
+
     }
 
     get head() {
@@ -57,22 +62,22 @@ module.exports = class Snake {
       var ghostSnake = this.clone()
       ghostSnake.health_points--;
       var nextCoord = []
-      if(direction == 'left') {
+      if(direction === 'left') {
         nextCoord[0] = ghostSnake.head[0] - 1;
         nextCoord[1] = ghostSnake.head[1];
         ghostSnake.coords.splice(0,0,nextCoord);
         ghostSnake.coords.pop()
-      } else if(direction == 'right') {
+      } else if(direction === 'right') {
         nextCoord[0] = ghostSnake.head[0] + 1;
         nextCoord[1] = ghostSnake.head[1];
         ghostSnake.coords.splice(0,0,nextCoord);
         ghostSnake.coords.pop()
-      } else if(direction == 'up') {
+      } else if(direction === 'up') {
         nextCoord[0] = ghostSnake.head[0];
         nextCoord[1] = ghostSnake.head[1] - 1;
         ghostSnake.coords.splice(0,0,nextCoord);
         ghostSnake.coords.pop()
-      } else if(direction == 'down') {
+      } else if(direction === 'down') {
         nextCoord[0] = ghostSnake.head[0];
         nextCoord[1] = ghostSnake.head[1] + 1;
         ghostSnake.coords.splice(0,0,nextCoord);
