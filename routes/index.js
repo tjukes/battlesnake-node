@@ -44,8 +44,6 @@ router.post('/move', function(req, res) {
             console.log(err.stack);
         }
     }
-
-
 });
 
 // adds the current req.body to the appropriate game history

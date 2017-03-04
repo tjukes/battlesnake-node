@@ -87,7 +87,7 @@ module.exports = class Board {
         this.width = body.width;
         this.height = body.height;
         this.myID = body.you; // our snake's ID
-        this.snakes = body.snakes.map((snakeData) => new Snake(body, snakeData.id));
+        this.snakes = body.snakes;
         this.food = body.food;
         this.displayGrid = this.createGrid(body.width, body.height);
 

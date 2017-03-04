@@ -56,15 +56,6 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     var tail = snake.tail;
 
     // create a can't-go-there grid in board.grid
-    var board = new Board(reqBody.height);
-
-    console.log('My Head @ ' + head);
-    console.log('My Tail @ ' + tail);
-    console.log('My Last tail: ' + previousTail);
-    console.log('My Last diff tail: ' + lastDifferentTail);
-
-
-    // create a can't-go-there grid in board.grid
     var board = new Board(reqBody);
 
     board.print();
@@ -152,9 +143,10 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
         // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
         myMove = SanityCheck(myMove, head, board.snakesOnlyGrid);
 
-        console.log('I think I will move ' + myMove);
-        console.log('-------------------------------------------------');
 
-        return myMove;
     }
+
+    console.log('I think I will move ' + myMove);
+    console.log('-------------------------------------------------');
+    return myMove;
 };
