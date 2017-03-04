@@ -2,6 +2,7 @@
 
 var Board = require('../ai/Board.js');
 var Snake = require('../ai/Snake.js');
+var SanityCheck = require('../ai/sanityCheck.js');
 
 module.exports = function getMyMove(reqBody) {
 
@@ -58,6 +59,11 @@ module.exports = function getMyMove(reqBody) {
 
         console.log('I think I will move ' + myMove);
         console.log('-------------------------------------------------');
+
+        // Do a sanity check on the chosen move with no fancy grid stuff, to
+        // (a) make sure we have a move
+        // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
+        myMove = SanityCheck(myMove, head, board.snakesOnlyGrid);
 
         return myMove;
 
