@@ -3,6 +3,7 @@
 var Board = require('../ai/Board.js');
 var Snake = require('../ai/Snake.js');
 var chaseTail = require('../ai/ChaseTail.js');
+var lastDifferentTail = false;
 
 function findLastDifferentTail(reqBodyHistory) {
     var currentReqBody = reqBodyHistory[reqBodyHistory.length - 1];
@@ -35,12 +36,12 @@ function equal(coord1, coord2) {
 }
 module.exports = function getMyMove(reqBody, reqBodyHistory) {
 
-    var isFirstMove = reqBodyHistory.length == 1;
+    var isFirstMove = (reqBodyHistory.length < 3);
 
     var snake = new Snake(reqBody, reqBody.you);
 
     var previousTail = false;
-    var lastDifferentTail = false;
+
     if (!isFirstMove) {
         var previousTail = getPreviousTail(reqBodyHistory);
 
@@ -54,21 +55,22 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
 
     // create a can't-go-there grid in board.grid
     var board = new Board(reqBody);
+    board.print();
 
     console.log('My Head @ ' + head);
     console.log('My Tail @ ' + tail);
     console.log('My Last tail: ' + previousTail);
     console.log('My Last diff tail: ' + lastDifferentTail);
-
+    console.log('IS first-ish move: ' + isFirstMove);
 
     console.log('My Length: ' + snake.coords.length);
     console.log('My health: ' + snake.health_points);
     console.log('Im storing food in my butt? ' + snake.isStoringFood);
 
-    board.addSnakes(reqBody.snakes);
+    //board.addSnakes(reqBody.snakes);
 
     // this doesnt do anything
-    board.addFood(reqBody.food);
+    //board.addFood(reqBody.food);
     if (!isFirstMove)
         console.log('Is lastTail open?' + board.isGridOpen(lastDifferentTail));
 
@@ -76,10 +78,10 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
 
     if (myPathsToFood.length > 1) {
         // of course add the auras..
-        board.addAuraToOtherSnakeHeads(reqBody.you);
+        //  board.addAuraToOtherSnakeHeads(reqBody.you);
     }
 
-    board.print();
+
 
     var myMove = false;
 

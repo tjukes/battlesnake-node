@@ -9,59 +9,75 @@ const Snake = require("./Snake.js");
 _(global).extend(require('./utils'));
 
 function addEdges(i, j, grid, graph, weight) {
-  var keys = '';
-  if (i > 0) {
-    keys = [[i-1,j]+'', [i,j]+''];
-    graph.addEdge(...keys, weight(...keys, graph));
-    keys = [[i,j]+'', [i-1,j]+''];
-    graph.addEdge(...keys, weight(...keys, graph));
-  }
-  if (i < grid.width) {
-    keys = [[i+1,j]+'', [i,j]+''];
-    graph.addEdge(...keys, weight(...keys, graph));
-    keys = [[i,j]+'', [i+1,j]+''];
-    graph.addEdge(...keys, weight(...keys, graph));
-  }
-  if (j > 0) {
-    keys = [[i,j-1]+'', [i,j]+''];
-    graph.addEdge(...keys, weight(...keys, graph));
-    keys = [[i,j]+'', [i,j-1]+''];
-    graph.addEdge(...keys, weight(...keys, graph));
-  }
-  if (j < grid.height) {
-    keys = [[i,j+1]+'', [i,j]+''];
-    graph.addEdge(...keys, weight(...keys, graph));
-    keys - [[i,j]+'', [i+1,j]+''];
-    graph.addEdge(...keys, weight(...keys, graph));
-  }
+    var keys = '';
+    if (i > 0) {
+        keys = [
+            [i - 1, j] + '', [i, j] + ''
+        ];
+        graph.addEdge(...keys, weight(...keys, graph));
+        keys = [
+            [i, j] + '', [i - 1, j] + ''
+        ];
+        graph.addEdge(...keys, weight(...keys, graph));
+    }
+    if (i < grid.width) {
+        keys = [
+            [i + 1, j] + '', [i, j] + ''
+        ];
+        graph.addEdge(...keys, weight(...keys, graph));
+        keys = [
+            [i, j] + '', [i + 1, j] + ''
+        ];
+        graph.addEdge(...keys, weight(...keys, graph));
+    }
+    if (j > 0) {
+        keys = [
+            [i, j - 1] + '', [i, j] + ''
+        ];
+        graph.addEdge(...keys, weight(...keys, graph));
+        keys = [
+            [i, j] + '', [i, j - 1] + ''
+        ];
+        graph.addEdge(...keys, weight(...keys, graph));
+    }
+    if (j < grid.height) {
+        keys = [
+            [i, j + 1] + '', [i, j] + ''
+        ];
+        graph.addEdge(...keys, weight(...keys, graph));
+        keys - [
+            [i, j] + '', [i + 1, j] + ''
+        ];
+        graph.addEdge(...keys, weight(...keys, graph));
+    }
 
 }
 
 /**
-  * Weighting scheme will assign 1 to edges going out
-  * to vertices which are unoccupied
-  * @param {string} v1 - edge starts at this vertex
-  * @param {string} v2 - edge goes to this vertex
-  * @return {number} weight
-  */
+ * Weighting scheme will assign 1 to edges going out
+ * to vertices which are unoccupied
+ * @param {string} v1 - edge starts at this vertex
+ * @param {string} v2 - edge goes to this vertex
+ * @return {number} weight
+ */
 function simple(v1, v2, graph) {
-  var weight = 0;
-  if(graph.vertexValue(v2) === 0) {
-    weight = 1;
-  }
-  return weight;
+    var weight = 0;
+    if (graph.vertexValue(v2) === 0) {
+        weight = 1;
+    }
+    return weight;
 }
 
 // scoped function, not exported
 function addSnakes(snakes, grid) {
-  for (var snake of snakes) {
-    for (var snakeCoords of snake.coords) {
-      var x, y;
-      x = snakeCoords[0];
-      y = snakeCoords[1];
-      grid[y][x] = 1;
+    for (var snake of snakes) {
+        for (var snakeCoords of snake.coords) {
+            var x, y;
+            x = snakeCoords[0];
+            y = snakeCoords[1];
+            grid[y][x] = 1;
+        }
     }
-  }
 }
 
 module.exports = class Board {
@@ -70,13 +86,14 @@ module.exports = class Board {
         this.snakesOnlyGrid = this.createGrid(body.width, body.height);
         this.width = body.width;
         this.height = body.height;
-        this.myID = body.you;   // our snake's ID
+        this.myID = body.you; // our snake's ID
         this.snakes = body.snakes.map((snakeData) => new Snake(body, snakeData.id));
-        this.food = [];
+        this.food = body.food;
         this.displayGrid = this.createGrid(body.width, body.height);
 
         addSnakes(this.snakes, this.grid);
         addSnakes(this.snakes, this.snakesOnlyGrid);
+
         Object.freeze(this.snakesOnlyGrid);
         this.snakesOnlyGrid.forEach((row) => Object.freeze(row));
     }
@@ -90,37 +107,37 @@ module.exports = class Board {
      * @returns {Graph}
      */
     createGraph(grid, rule = simple) {
-      var graph = new Graph();
-      //First, initialize all vertices b/c don't want to overwrite them
-      grid.forEach((row, i) => {
-        row.forEach((val, j) => {
-          graph.addVertex([i,j]+'', val);
+        var graph = new Graph();
+        //First, initialize all vertices b/c don't want to overwrite them
+        grid.forEach((row, i) => {
+            row.forEach((val, j) => {
+                graph.addVertex([i, j] + '', val);
+            });
         });
-      });
 
-      grid.forEach((row, rowIndex) => {
-        row.forEach((val, colIndex) => {
-          addEdges(rowIndex, colIndex, grid, graph, simple);
+        grid.forEach((row, rowIndex) => {
+            row.forEach((val, colIndex) => {
+                addEdges(rowIndex, colIndex, grid, graph, simple);
+            });
         });
-      });
-      return graph;
+        return graph;
     }
 
     // find a path from a to b
     // handles the grid cloning and other things
     // (which the docs for pathfinding algorithm state is necessary)
-    pathFind(a, b, pretendDestinationOpen = false) {
-
+    pathFind(a, b) {
+        console.log('trying to pathfind from ' + a + ' to ' + b);
         var grid = this.cloneGrid();
 
         // NOTE: the destination is zeroed on grid before the search, if either are 1
         // the search algorithm wont work
 
-        grid[partOfASnake[1]][partOfASnake[0]] = 0;
+        grid[a[1]][b[0]] = 0;
 
         var pfgrid = new PF.Grid(grid);
-        var finder = new PF.AStarFinder();
-        var path = finder.findPath(partOfASnake[0], partOfASnake[1], destination[0], destination[1], pfgrid);
+        var finder = new PF.AStarFinder(pfgrid);
+        var path = finder.findPath(a[0], a[1], b[0], b[1], pfgrid);
 
         return path;
     }
@@ -194,8 +211,8 @@ module.exports = class Board {
 
     // probly a faster way to do this using Array.splice..
     cloneGrid(grid) {
-        if(grid === undefined) {
-          grid = this.grid;
+        if (grid === undefined) {
+            grid = this.grid;
         }
         var newgrid = [];
 
