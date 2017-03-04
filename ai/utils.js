@@ -155,8 +155,37 @@ function taxiDistance(startVertex, endVertex) {
  return Math.abs(startVertex[0] - endVertex[0]) + Math.abs(startVertex[1] - endVertex[1])
 }
 
+/**
+* Get destination coordinate from move up/down/left/right
+* NOTE it will return the destination coord regardless of whether it is in bounds or open
+* @param {String} direction - the move
+* @param {Array} startingCoord - the coord you move from
+*/
+function coordFromDirection(direction, startingCoord) {
+  var destination = [];
+  if (direction == "up") {
+    destination[0] = startingCoord[0];
+    destination[1] = startingCoord[1] - 1;
+  }
+  if (direction == "down") {
+    destination[0] = startingCoord[0];
+    destination[1] = startingCoord[1] + 1;
+  }
+  if (direction == "right") {
+    destination[0] = startingCoord[0] + 1;
+    destination[1] = startingCoord[1];
+  }
+  if (direction == "left") {
+    destination[0] = startingCoord[0] - 1;
+    destination[1] = startingCoord[1];
+  }
+  return destination;
+}
+
+
 module.exports = {
   equiDistantFromHead,
   _equiDistant,
-  getNeighboursIndex
-}
+  getNeighboursIndex,
+  coordFromDirection
+};
