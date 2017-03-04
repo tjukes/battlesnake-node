@@ -1,6 +1,7 @@
-var utils = require('../ai/utils.js')
+var utils = require('../ai/utils.js');
 
 var mockGrid = []
+var mockBoard;
 
 describe("_equiDistant", () => {
   it("Should have 4*distance number of items", () => {
@@ -18,9 +19,6 @@ describe("_equiDistant", () => {
 })
 
 describe("equiDistantFromHead", () => {
-  beforeEach(() => {
-  })
-
   it("all indices should be positive", () => {
     var head = [3,3]
     var cells = utils.equiDistantFromHead(head, 5, 20, 20);
@@ -35,3 +33,83 @@ describe("equiDistantFromHead", () => {
     expect(cells.filter((cell) => cell[0] > height - 1 || cell[1] > width - 1 ).length).toBe(0)
   })
 })
+
+describe("closestSnakes", () => {
+  beforeEach(mockDataClosestSnake)
+  it("Should find that I am close to the right number of other snakes", () => {
+    expect(utils.closestSnakes(mockBoard, 3).length).toBe(2);
+    expect(utils.closestSnakes(mockBoard, 1).length).toBe(1);
+    expect(utils.closestSnakes(mockBoard, 0).length).toBe(0);
+  })
+  it("List should be sorted, starting with smallest path", () => {
+      list = utils.closestSnakes(mockBoard, 3)
+      expect(list[1].path.length - list[0].path.length).toBeGreaterThan(-1)
+  })
+})
+
+function mockDataClosestSnake() {
+  var myUuid = "25229082-f0d7-4315-8c52-6b0ff23fb1fb";
+  mockBoard =  {
+    you: myUuid,
+    grid: [
+      [1,0,1,0,1,1,1],
+      [1,0,0,0,0,0,0],
+      [1,0,0,0,0,0,0],
+      [0,0,0,0,0,0,0]
+    ],
+    "snakes": [
+      {
+        "taunt": "git bad",
+        "name": "some-snake",
+        "id": "25229082-f0d7-4315-8c52-6b0ff23fb1fc",
+        "health_points": 93,
+        "coords": [
+          [
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "taunt": "git gud",
+        "name": "my-snake",
+        "id": "25229082-f0d7-4315-8c52-6b0ff23fb1fb",
+        "health_points": 93,
+        "coords": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ]
+        ]
+      },
+      {
+        "taunt": "gotta go fast",
+        "name": "other-snake",
+        "id": "0fd33b05-37dd-419e-b44f-af9936a0a00c",
+        "health_points": 50,
+        "coords": [
+          [
+            4,
+            0
+          ],
+          [
+            5,
+            0
+          ],
+          [
+            6,
+            0
+          ]
+        ]
+      }
+    ],
+  }
+}

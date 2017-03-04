@@ -2,6 +2,7 @@ PF = require("pathfinding")
 
 Snake = require("./Snake.js")
 
+
 /**
  * Looks for set of cells that are or distance n from the head
  * Disregards all other snakes on board.  Might return negative indices.
@@ -45,6 +46,10 @@ function _equiDistant(head, distance, height, width) {
 /**
  * Looks for set of cells that are or distance n from the head
  * Disregards all other snakes on board.  Doesn't return negative indices.
+ * @param {Array<number>} head - Snake.head
+ * @param {number} distance
+ * @param {height} height
+ * @param {width} width
  */
 function equiDistantFromHead(head, distance, height, width) {
    cells = _equiDistant(head, distance, width, height);
@@ -57,6 +62,8 @@ function equiDistantFromHead(head, distance, height, width) {
    return cells;
 }
 
+
+
 /**
  * Search
  * First search all of moves keeping other snakes fixed.  Can go deeper
@@ -68,7 +75,65 @@ function searchBoard() {
 
 }
 
+/**
+ * Takes a look at where other snake's heads might be in the short term.
+ * @param {Board} Board
+ * @param {integer} turns - how many turns to look at into the future.
+ * Keep in mind that we shouldn't look too far, because this is O(3^n).  Eek!
+ */
+function searchHeads(board, turns) {
+  snakePaths = closestSnakes(board, turns).map((snakePath) => {snakePath.snake})
+  // find all possible paths over n turns
+  function search() {
+    for (snake of snakes) {
+      snakesMove()
 
+    }
+  //Given a snake is a place, look ahead one move
+  function snakesMove(snakes) {
+    var nextStepScenarios = []
+    for (snake of snakes) {
+      //Do all moves
+      snake.move()
+    }
+  }
+  }
+
+}
+
+/**
+ * Find all snakes that you could have a head-on collision with within *distance* turns
+ * Note: this assumes all other snakes are static when calculating number of
+ * turns until collision between two snake heads.
+ * @param board
+ * @return {Array<Object>} an array of objects w/ {snake: Snake, path: Array<Point>} that are within distance*2 of
+ * the given snakehead
+ */
+function closestSnakes(board, distance) {
+  // Loop over all snakes and all within "striking distance"
+  // Note that pathfinding takes and receives coords as (col, row),
+  // but grid is (row, col)
+  var grid = new PF.Grid(board.grid);
+  var finder = new PF.AStarFinder();
+  const mySnake = new Snake(board, board.you)
+  const myHead = mySnake.head;
+  var closeSnakes = []
+  //Check out the distance to all other snakes
+  for(snake of board.snakes) {
+    if(snake.id !== board.you) {
+      var strangerSnake = new Snake(board, snake.id)
+      // Don't modify original grid
+      var searchGrid = grid.clone()
+      searchGrid.setWalkableAt(myHead[0], myHead[1], true)
+      searchGrid.setWalkableAt(strangerSnake.head[0], strangerSnake.head[1], true)
+      var path = finder.findPath(myHead[0], myHead[1], strangerSnake.head[0], strangerSnake.head[1], searchGrid);
+      if(path.length <= distance*2+1 && path.length !== 0) {
+        closeSnakes.push({snake: strangerSnake, path: path})
+      }
+    }
+  }
+  return closeSnakes.sort((snakePath) => -snakePath.path.length);
+}
 
 /**
  * Check if next move could result in checkmate.
@@ -158,5 +223,5 @@ function taxiDistance(startVertex, endVertex) {
 module.exports = {
   equiDistantFromHead,
   _equiDistant,
-  getNeighboursIndex,
+  getNeighboursIndex
 };

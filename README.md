@@ -14,12 +14,20 @@
     -   [Running the AI locally](#running-the-ai-locally)
 -   [API](#api)
 -   [simple](#simple)
--   [Board](#board)
-    -   [constructor](#constructor)
-    -   [createGraph](#creategraph)
+-   [createGraph](#creategraph)
+-   [naiveProbabilityLongTerm](#naiveprobabilitylongterm)
+-   [Snake](#snake)
+    -   [move](#move)
 -   [\_equiDistant](#_equidistant)
 -   [equiDistantFromHead](#equidistantfromhead)
+-   [searchBoard](#searchboard)
+-   [searchHeads](#searchheads)
+-   [closestSnakes](#closestsnakes)
+-   [checkMate](#checkmate)
+-   [dijkstra](#dijkstra)
+-   [aStar](#astar)
 -   [getNeighboursIndex](#getneighboursindex)
+-   [checkTailGrowth](#checktailgrowth)
 -   [taxiDistance](#taxidistance)
 
 ## Snakespeare
@@ -102,22 +110,7 @@ to vertices which are unoccupied
 
 Returns **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** weight
 
-## Board
-
-Class represents the board
-
-### constructor
-
-Create a board object.
-The board will keep track of the request information
-and keep the game states and other useful useful information
-infered from the current state.
-
-**Parameters**
-
--   `body` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** the body of the request
-
-### createGraph
+## createGraph
 
 Creates a graph of the board.
  See API of [Graph.js](https://www.npmjs.com/package/graph.js#Graph+toJSON)
@@ -129,6 +122,38 @@ Creates a graph of the board.
     default sets all edges to open vertices value 0) w/ edge weight 1, 0 otherwise (optional, default `simple`)
 
 Returns **Graph** 
+
+## naiveProbabilityLongTerm
+
+Should return an guestimation the probability of next cell being occupied on the nth turn:
+
+-   the length of the snake
+-   the initial location of the snake head.
+
+**Parameters**
+
+-   `grid`  
+-   `snake`  
+
+## Snake
+
+**Parameters**
+
+-   `reqBody` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** might replace this with board
+-   `uuid` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** snake's unique identifier
+
+### move
+
+Will return a copy of the snake who has moved in the direction
+specified.  The direction will be taken whether or not its walkable,
+it is the responsibility of the board keep track of snake, and tell
+it on next turn whether or not it has died.
+
+**Parameters**
+
+-   `direction` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** either of "up, "down", "left", "right"
+
+Returns **[Snake](#snake)** a clone having taken the move.
 
 ## \_equiDistant
 
@@ -149,10 +174,10 @@ Disregards all other snakes on board.  Doesn't return negative indices.
 
 **Parameters**
 
--   `head`  
--   `distance`  
--   `height`  
--   `width`  
+-   `head` **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)>** Snake.head
+-   `distance` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `height` **height** 
+-   `width` **width** 
 
 ## searchBoard
 
@@ -164,15 +189,28 @@ mark all paths that give death as negative score
 
 ## searchHeads
 
-Takes at where other snake's heads might be in the short term.
+Takes a look at where other snake's heads might be in the short term.
 
 **Parameters**
 
--   `Board` **[Board](#board)** 
+-   `Board` **Board** 
 -   `turns` **integer** how many turns to look at into the future.
     Keep in mind that we shouldn't look too far, because this is O(3^n).  Eek!
--   `reqBody`  
 -   `board`  
+
+## closestSnakes
+
+Find all snakes that you could have a head-on collision with within _distance_ turns
+Note: this assumes all other snakes are static when calculating number of
+turns until collision between two snake heads.
+
+**Parameters**
+
+-   `board`  
+-   `distance`  
+
+Returns **[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** an array of objects w/ {snake: Snake, path: Array<Point>} that are within distance\*2 of
+the given snakehead
 
 ## checkMate
 
@@ -217,7 +255,7 @@ if planning on going into last element of tail, abort!
 
 **Parameters**
 
--   `board` **[Board](#board)** 
+-   `board` **Board** 
 
 ## taxiDistance
 

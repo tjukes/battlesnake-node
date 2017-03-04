@@ -6,7 +6,6 @@ var mockBoard = {};
 describe("Snakes", () => {
   beforeEach(mockDataSnake)
   it("coordinates are deeply cloned from board.snakes.coords", () => {
-    console.log(snake.head)
     expect(snake.coords).not.toBe(mockBoard.snakes[1].coords);
     expect(snake.coords[0]).not.toBe(mockBoard.snakes[1].coords[0]);
   });
