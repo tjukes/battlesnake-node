@@ -1,24 +1,115 @@
 'use strict';
-var PF = require('pathfinding');
+
+var Graph = require('graph.js/dist/graph.full.js');
+var _ = require('underscore');
+const Snake = require("./Snake.js");
+
+//This loads all utility functions into the global namespace
+//Might not want this eventually
+_(global).extend(require('./utils'));
+
+function addEdges(i, j, grid, graph, weight) {
+  var keys = '';
+  if (i > 0) {
+    keys = [[i-1,j]+'', [i,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+    keys = [[i,j]+'', [i-1,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+  }
+  if (i < grid.width) {
+    keys = [[i+1,j]+'', [i,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+    keys = [[i,j]+'', [i+1,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+  }
+  if (j > 0) {
+    keys = [[i,j-1]+'', [i,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+    keys = [[i,j]+'', [i,j-1]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+  }
+  if (j < grid.height) {
+    keys = [[i,j+1]+'', [i,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+    keys - [[i,j]+'', [i+1,j]+''];
+    graph.addEdge(...keys, weight(...keys, graph));
+  }
+
+}
+
+/**
+  * Weighting scheme will assign 1 to edges going out
+  * to vertices which are unoccupied
+  * @param {string} v1 - edge starts at this vertex
+  * @param {string} v2 - edge goes to this vertex
+  * @return {number} weight
+  */
+function simple(v1, v2, graph) {
+  var weight = 0;
+  if(graph.vertexValue(v2) === 0) {
+    weight = 1;
+  }
+  return weight;
+}
+
+// scoped function, not exported
+function addSnakes(snakes, grid) {
+  for (var snake of snakes) {
+    for (var snakeCoords of snake.coords) {
+      var x, y;
+      x = snakeCoords[0];
+      y = snakeCoords[1];
+      grid[y][x] = 1;
+    }
+  }
+}
 
 module.exports = class Board {
-    // TODO: make a nicer display this.displayGrid
-    constructor(size) {
-        this.grid = this.createGrid(size);
-        this.size = size;
-        this.snakes = [];
+    constructor(body) {
+        this.grid = this.createGrid(body.width, body.height);
+        this.snakesOnlyGrid = this.createGrid(body.width, body.height);
+        this.width = body.width;
+        this.height = body.height;
+        this.myID = body.you;   // our snake's ID
+        this.snakes = body.snakes.map((snakeData) => new Snake(body, snakeData.id));
         this.food = [];
-        this.displayGrid = this.createGrid(size);
+        this.displayGrid = this.createGrid(body.width, body.height);
+
+        addSnakes(this.snakes, this.grid);
+        addSnakes(this.snakes, this.snakesOnlyGrid);
+        Object.freeze(this.snakesOnlyGrid);
+        this.snakesOnlyGrid.forEach((row) => Object.freeze(row));
     }
-    /* find a path from a to b
-       handles the grid cloning and other things
-       (which the docs for pathfinding algorithm state is necessary)
 
-       NOTE: if destination is a 1 on the grid, there are no paths.
-       that is why it sets the partOfASnake to 0 in the cloned grid
-    */
+    /** Creates a graph of the board.
+     *  See API of [Graph.js](https://www.npmjs.com/package/graph.js#Graph+toJSON)
+     * @param {Array<Array>} grid - the grid of snakes
+     * @param {function} [rule=simple] -
+     * This is how we assign weights to edges between the cells of the board.
+     * default sets all edges to open vertices value 0) w/ edge weight 1, 0 otherwise
+     * @returns {Graph}
+     */
+    createGraph(grid, rule = simple) {
+      var graph = new Graph();
+      //First, initialize all vertices b/c don't want to overwrite them
+      grid.forEach((row, i) => {
+        row.forEach((val, j) => {
+          graph.addVertex([i,j]+'', val);
+        });
+      });
 
-    pathFind(partOfASnake, destination) {
+      grid.forEach((row, rowIndex) => {
+        row.forEach((val, colIndex) => {
+          addEdges(rowIndex, colIndex, grid, graph, simple);
+        });
+      });
+      return graph;
+    }
+
+    // find a path from a to b
+    // handles the grid cloning and other things
+    // (which the docs for pathfinding algorithm state is necessary)
+    pathFind(a, b, pretendDestinationOpen = false) {
 
         var grid = this.cloneGrid();
 
@@ -71,20 +162,22 @@ module.exports = class Board {
         }
     }
 
-    // zeroes a grid  (2d array of 0's,1's) of size sizexsize
-    createGrid(size) {
+
+
+    createGrid(width, height) {
+
         var grid = [];
-        for (var x = 0; x < size; x++) {
-            grid[x] = [];
-            for (var y = 0; y < size; y++) {
-                grid[x][y] = 0;
+        for (var y = 0; y < height; y++) {
+            grid[y] = [];
+            for (var x = 0; x < width; x++) {
+                grid[y][x] = 0;
             }
         }
         return grid;
     }
     // check if a coordinate is open on the grid
     gridOpen(coord) {
-        this.grid[coord[1]][coord[0]] == 0;
+        this.grid[coord[1]][coord[0]] = 0;
     }
 
     // puts a '1' at a coordinate on the PF grid
@@ -94,13 +187,16 @@ module.exports = class Board {
     // checks for a 0 on the PF grid at a coordinate [x,y]
     isGridOpen(coord) {
 
-        return this.grid[coord[1]][coord[0]] == 0;
+        return this.grid[coord[1]][coord[0]] === 0;
+
     }
 
 
     // probly a faster way to do this using Array.splice..
-    cloneGrid() {
-        var grid = this.grid;
+    cloneGrid(grid) {
+        if(grid === undefined) {
+          grid = this.grid;
+        }
         var newgrid = [];
 
         for (var x = 0; x < grid.length; x++) {
@@ -110,20 +206,6 @@ module.exports = class Board {
             }
         }
         return newgrid;
-    }
-    // adds the snakes coordinates to the PF grid
-    addSnakes(snakes) {
-        this.snakes = snakes;
-        for (var snake of snakes) {
-            for (var snakeCoords of snake.coords) {
-                var x, y;
-                x = snakeCoords[0];
-                y = snakeCoords[1];
-                this.grid[y][x] = 1;
-
-            }
-        }
-
     }
     // this function does nothing for now, but can be useful for debugging
     addFood(foods) {
@@ -135,8 +217,7 @@ module.exports = class Board {
             this.displayGrid = 'F';
             //this.grid[y][x] = 0;
         }
-    };
-    // checks is a coordinate [x,y] is in bounds
+    }
     isInBounds(coord) {
         var x = coord[0];
         var y = coord[1];
@@ -179,11 +260,11 @@ module.exports = class Board {
     getRandomFreeNeighbor(coord) {
         var neighbors = this.getNeighborCoords(coord);
         var result;
-        if (neighbors.length == 0) {
+        if (neighbors.length === 0) {
             return -1; // no neighbors :(
         }
 
-        for (var coord of neighbors) {
+        for (var coordinate of neighbors) {
             if (this.isGridOpen(coord)) {
                 result = coord;
                 break;

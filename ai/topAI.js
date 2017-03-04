@@ -53,12 +53,13 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     var tail = snake.tail;
 
     // create a can't-go-there grid in board.grid
-    var board = new Board(reqBody.height);
+    var board = new Board(reqBody);
 
     console.log('My Head @ ' + head);
     console.log('My Tail @ ' + tail);
     console.log('My Last tail: ' + previousTail);
     console.log('My Last diff tail: ' + lastDifferentTail);
+
 
     console.log('My Length: ' + snake.coords.length);
     console.log('My health: ' + snake.health_points);
