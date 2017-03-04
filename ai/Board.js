@@ -146,16 +146,6 @@ module.exports = class Board {
         //approximation of head being in cell
         //get lists of nodes that have the same manhatten distance from snake-head
         //They basically form a diamon-shape
-
-        //then assign the same probability based on manhatten distance
-
-        //head is array of coords
-
-
-
-        // find a path from a to b
-        // handles the grid cloning and other things
-        // (which the docs for pathfinding algorithm state is necessary)
     }
 
     pathFind(a, b) {
@@ -172,7 +162,7 @@ module.exports = class Board {
         // Added more comments to function declarations, fixed bug in findPath that was making me do a workaround
         var grid = this.cloneGrid();
 
-        // NOTE: the coords a and b are zeroed on the grid before the search, if either are 1
+        // NOTE: the destination is zeroed on grid before the search, if either are 1
         // the search algorithm wont work
 
         grid[b[1]][b[0]] = 0;
@@ -192,23 +182,22 @@ module.exports = class Board {
 
         for (var food of this.food) {
             //
-            var thisFoodPath = this.pathFind(head, food, false);
+            var thisFoodPath = this.pathFind(head, food);
             //console.log('path from food to tail? ');
-            if (this.hasPath(tail, food, true)) {
+            if (this.hasPath(tail, food) && thisFoodPath.length > 0) {
                 foodPaths.push(thisFoodPath);
             }
         }
         return foodPaths;
     }
     /*
-      If you want to find route to a point that might be a 1 on the grid,
-      you need to pretend that it's a 0 or  the pathfinder won't work
+      I call it snakePartCoord because the algorithm will temporarilty set a 0 on
+      it's coordinate so it can pathfind. cant pathfind if it's set to 1
     */
-    hasPath(fromCoord, toCoord) {
-        var path = this.pathFind(fromCoord, toCoord);
+    hasPath(snakePartCoord, toCoord) {
+        var path = this.pathFind(snakePartCoord, toCoord);
         return path.length > 0;
     }
-
     // adds an aura to other snake heads - what else is there to say?
     // could try only adding the aura around heads of larger snakes than us,
     // but this way it helps with choke points too

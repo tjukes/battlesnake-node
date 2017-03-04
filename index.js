@@ -11,7 +11,7 @@ var routes = require('./routes')
 
 // For deployment to Heroku, the port needs to be set using ENV, so
 // we check for the port number in process.env
-app.set('port', (process.env.PORT || 9001))
+app.set('port', (process.env.PORT || 9002))
 
 app.enable('verbose errors')
 

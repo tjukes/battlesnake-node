@@ -27,7 +27,6 @@ module.exports = class Snake {
             }
         }
 
-
         // Want to clone everything so they can be modified
         // to explore future moves w/out overwriting
         // board/previous snakes's values
@@ -90,4 +89,18 @@ module.exports = class Snake {
     clone() {
         return new Snake(null, null, this);
     }
+
+
+    removeBelly() {
+        var preTail = this.coords[this.size - 2];
+        if (this.size > 2) {
+            if (this.tail == preTail) {
+                this.coords.pop();
+            }
+        }
+    }
 };
+
+function equal(coord1, coord2) {
+    return ((coord1[0] == coord2[0]) && (coord1[1] == coord2[1]));
+}
