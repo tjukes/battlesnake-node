@@ -2,6 +2,7 @@
 
 var Graph = require('graph.js/dist/graph.full.js');
 var _ = require('underscore');
+const Snake = require("./Snake.js");
 
 //This loads all utility functions into the global namespace
 //Might not want this eventually
@@ -70,7 +71,7 @@ module.exports = class Board {
         this.width = body.width;
         this.height = body.height;
         this.myID = body.you;   // our snake's ID
-        this.snakes = body.snakes;
+        this.snakes = body.snakes.map((snakeData) => new Snake(body, snakeData.id));
         this.food = [];
         this.displayGrid = this.createGrid(body.width, body.height);
 
@@ -212,8 +213,10 @@ module.exports = class Board {
 
 
     // probly a faster way to do this using Array.splice..
-    cloneGrid() {
-        var grid = this.grid;
+    cloneGrid(grid) {
+        if(grid === undefined) {
+          grid = this.grid;
+        }
         var newgrid = [];
 
         for (var x = 0; x < grid.length; x++) {
