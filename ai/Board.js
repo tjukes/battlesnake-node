@@ -74,6 +74,7 @@ module.exports = class Board {
         this.food = [];
         this.displayGrid = this.createGrid(body.width, body.height);
 
+
         addSnakes(this.snakes, this.grid);
         addSnakes(this.snakes, this.snakesOnlyGrid);
         Object.freeze(this.snakesOnlyGrid);
@@ -105,9 +106,30 @@ module.exports = class Board {
       return graph;
     }
 
+  /**
+    * Should return an guestimation the probability of next cell being occupied on the nth turn:
+    * - the length of the snake
+    * - the initial location of the snake head.
+    * @param {Array<Array>}
+    *
+    */
+   naiveProbabilityLongTerm(grid, snake) {
+     var heatmap = grid;
+     //approximation of head being in cell
+       //get lists of nodes that have the same manhatten distance from snake-head
+       //They basically form a diamon-shape
+
+       //then assign the same probability based on manhatten distance
+
+       //head is array of coords
+
+
+
     // find a path from a to b
     // handles the grid cloning and other things
     // (which the docs for pathfinding algorithm state is necessary)
+    }
+
     pathFind(a, b, pretendDestinationOpen = false) {
         var PF = require('pathfinding');
         var grid = this.cloneGrid();
