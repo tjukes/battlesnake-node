@@ -1,10 +1,12 @@
+/*jslint node: true */
+/*jshint esversion: 6 */
 'use strict';
 
 var express = require('express');
 var router  = express.Router();
 var PF = require('pathfinding');
 var Board = require('../ai/Board.js');
-var arkFoodFinder = require('../ai/arkFoodFinder.js');
+var foodFinderAI = require('../ai/arkFoodFinder.js');
 
 
 // Handle POST request to '/start'
@@ -34,21 +36,26 @@ router.post('/move', function (req, res) {
     console.log('making a move');
     console.log('food present at ' + board.food);
     console.log(board.grid);
-
-    var findFoodMove = foodFinderAI(board);
-  } catch(e) {
-    console.log(e.message);
     
+    var AIs = [foodFinderAI];
+    var votes = AIs.map((fn) => fn(board));
+
+    // Change how to decide between AIs later
+    var myMove = votes[0].move;
+
+    var data = {
+    // move: chooseRandomMove(['up','down','left','right']),
+      move: myMove, // options are up down left right
+      taunt: "eat all the things!!11~~",
+    };
+    return res.json(data);
+  }
+
+  catch(e) {
+    console.log(e.message);
   }
 
   
-  
-  var data = {
-    // move: chooseRandomMove(['up','down','left','right']),
-    move: findFoodMove, // options are up down left right
-    taunt: "eat all the things!!11~~",
-  };
-  return res.json(data);
 });
 
 module.exports = router;
