@@ -12,7 +12,6 @@ function safeSpace(board, turns) {
 
   //FIXME want to avoid including yourself in these loops!
   // grab snakeheads
-  console.log(board.snakes, "board snakes")
   var headsCurrent = board.snakes.map((snake) => {
     return snake.head;
   });
@@ -24,10 +23,8 @@ function safeSpace(board, turns) {
     snake.coords.splice(Math.max(length - turns, 1), turns);
   });
 
-  console.log(headsCurrent, "headsCurrent");
   for(let head of headsCurrent) {
     for (var i = 1; i <= turns; i++) {
-      console.log(head, "head in safeSpace");
       cells = utils.equiDistantFromHead(head, i, board.height, board.width);
       cells.forEach((cell) => {
         gridBlock(cell, grid)

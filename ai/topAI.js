@@ -8,7 +8,8 @@ module.exports = function getMyMove(reqBody) {
     try {
 
         var snake = new Snake(reqBody, reqBody.you);
-        var head = snake.head;
+        // FIXME
+        var head = snake.head; //this will have some issues if head has getter?
         var tail = snake.tail;
 
         // create a can't-go-there grid in board.grid

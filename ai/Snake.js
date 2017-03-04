@@ -31,7 +31,6 @@ module.exports = class Snake {
         // Want to clone everything so they can be modified
         // to explore future moves w/out overwriting
         // board/previous snakes's values
-
         this.uuid = me.uuid || me.id;
         this.id = me.uuid || me.id;
         this.health_points = me.health_points;
