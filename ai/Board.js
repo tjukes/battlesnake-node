@@ -223,7 +223,6 @@ module.exports = class Board {
 
         var x2 = coord2[0];
         var y2 = coord2[1];
-        //console.log('from ' + x1 + ' ' + y1 + ' ' + x2 + ' ' + y2);
 
         if (x2 > x1) {
             return 'right';
@@ -241,14 +240,6 @@ module.exports = class Board {
 
     print() {
         console.log(this.grid);
-        /*
-    for (var y = 0; y < this.size; y++) {
-    var row = [];
-    for (var x = 0; x < this.size; x++) {
-    row.push(this.grid[x][y]);
-  }
-  console.log(row);
-}*/
     }
 
     // eg 1,1 , 1,2
@@ -258,7 +249,6 @@ module.exports = class Board {
 
         var x2 = coord2[0];
         var y2 = coord2[1];
-        //console.log('from ' + x1 + ' ' + y1 + ' ' + x2 + ' ' + y2);
 
         if (x2 > x1) {
             return 'right';
@@ -274,15 +264,4 @@ module.exports = class Board {
         }
     }
 
-    print() {
-        console.log(this.grid);
-        /*
-    for (var y = 0; y < this.size; y++) {
-    var row = [];
-    for (var x = 0; x < this.size; x++) {
-    row.push(this.grid[x][y]);
-  }
-  console.log(row);
-}*/
-    }
 };

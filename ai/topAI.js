@@ -25,6 +25,7 @@ function getPreviousTail(reqBodyHistory) {
     return previousSnake.tail;
 }
 
+// these will be moved to utils or deleted if already in there
 function copyCoord(c) {
     return [c[0], c[1]];
 }
