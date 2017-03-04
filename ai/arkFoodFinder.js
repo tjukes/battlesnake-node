@@ -1,27 +1,14 @@
-/*jslint node: true */
 /*jshint esversion: 6 */
+/*jslint node: true */
 'use strict';
 
 var PF = require('pathfinding');
+var Utils = require('utils.js');
 //var Board = require('Board.js');
 
 function foodFinderAI(board) {
 
-    function findDirection(srcX, srcY, destX, destY) {
-        // src, dest = { x: __, y: _____ }
-        // error check
-
-        if ((Math.abs(srcX - destX) + (Math.abs(srcY - destY)) !=1 )) {
-            console.log('crappy input: src = ' + srcX + ', ' + srcY + ' dest = ' + destX+','+ destY);
-            return;
-        }
-        var res = "";
-        if (destX > srcX) { res = "right"; }
-        if (destX < srcX) { res = "left"; }
-        if (destY < srcY) { res = "up"; }
-        if (destY > srcY) { res = "down"; }
-        return res;
-    }
+    
 
     function findMySnake(board) {
     	// get full board, return array containing our snake coords

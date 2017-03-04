@@ -7,6 +7,7 @@ var router  = express.Router();
 var PF = require('pathfinding');
 var Board = require('../ai/Board.js');
 var foodFinderAI = require('../ai/arkFoodFinder.js');
+var Snake = require('../ai/Snake.js');
 
 
 // Handle POST request to '/start'
@@ -48,6 +49,10 @@ router.post('/move', function (req, res) {
       move: myMove, // options are up down left right
       taunt: "eat all the things!!11~~",
     };
+
+    var ourSnake = new Snake(board);
+    console.log('our snake head, using Snake object, is ' + ourSnake.head);
+    console.log('our snake id, using Snake object, is ' + ourSnake.id);
     return res.json(data);
   }
 
