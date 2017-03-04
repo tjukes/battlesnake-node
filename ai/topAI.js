@@ -51,7 +51,6 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
         }
     }
 
-<<<<<<< ac3f6998dbb14204bc5a221a329f1eed15172e56
 
     var head = snake.head;
     var tail = snake.tail;
@@ -63,17 +62,11 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     console.log('My Tail @ ' + tail);
     console.log('My Last tail: ' + previousTail);
     console.log('My Last diff tail: ' + lastDifferentTail);
-=======
-    var snake = new Snake(reqBody, reqBody.you);
-    // FIXME
-    var head = snake.head; //this will have some issues if head has getter?
-    var tail = snake.tail;
+
 
     // create a can't-go-there grid in board.grid
     var board = new Board(reqBody);
-<<<<<<< bec59d20545b986a4bc21aad70549ddb3f6a968e
->>>>>>> removed some commented out code, duplicate functions
-=======
+
     board.print();
 
     console.log('My Head @ ' + head);
@@ -81,7 +74,6 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     console.log('My Last tail: ' + previousTail);
     console.log('My Last diff tail: ' + lastDifferentTail);
     console.log('IS first-ish move: ' + isFirstMove);
->>>>>>> Merged new-master into nate, Im still debugging but it runs
 
     console.log('My Length: ' + snake.coords.length);
     console.log('My health: ' + snake.health_points);
@@ -127,7 +119,7 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     if (conditionsRightForTailChasing ||
         (!conditionsRightForTailChasing && !wehaveAPathToFood)) {
         console.log('I will chase my tail.');
-        return chaseTail(board, snake, lastDifferentTail);
+        myMove = chaseTail(board, snake, lastDifferentTail);
     }
 
     if (wehaveAPathToFood) {
@@ -160,21 +152,9 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
         // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
         myMove = SanityCheck(myMove, head, board.snakesOnlyGrid);
 
-<<<<<<< ac3f6998dbb14204bc5a221a329f1eed15172e56
-        return myMove;
         console.log('I think I will move ' + myMove);
         console.log('-------------------------------------------------');
-=======
-    console.log('I think I will move ' + myMove);
-    console.log('-------------------------------------------------');
->>>>>>> removed some commented out code, duplicate functions
 
         return myMove;
-
-
-<<<<<<< ac3f6998dbb14204bc5a221a329f1eed15172e56
-
-    };
-=======
->>>>>>> removed some commented out code, duplicate functions
+    }
 };
