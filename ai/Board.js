@@ -88,23 +88,13 @@ module.exports = class Board {
         this.height = body.height;
         this.myID = body.you; // our snake's ID
         this.snakes = body.snakes.map((snakeData) => new Snake(body, snakeData.id));
-        /*
-        var PF = require('pathfinding');
-
-        module.exports = class Board {
-            // TODO: make a nicer display this.displayGrid
-            constructor(size) {
-                this.grid = this.createGrid(size);
-                this.size = size;
-                this.snakes = [];
-                */
-        // Added more comments to function declarations, fixed bug in findPath that was making me do a workaround
-        this.food = [];
+        this.food = body.food;
         this.displayGrid = this.createGrid(body.width, body.height);
 
 
         addSnakes(this.snakes, this.grid);
         addSnakes(this.snakes, this.snakesOnlyGrid);
+
         Object.freeze(this.snakesOnlyGrid);
         this.snakesOnlyGrid.forEach((row) => Object.freeze(row));
     }
@@ -148,27 +138,20 @@ module.exports = class Board {
         //They basically form a diamon-shape
     }
 
+
+
+    // find a path from a to b
+    // handles the grid cloning and other things
+    // (which the docs for pathfinding algorithm state is necessary)
     pathFind(a, b) {
-        var PF = require('pathfinding');
-
-        /* find a path from a to b
-           handles the grid cloning and other things
-           (which the docs for pathfinding algorithm state is necessary)
-
-           NOTE: if destination is a 1 on the grid, there are no paths.
-           that is why it sets the partOfASnake to 0 in the cloned grid
-        */
-
-        // Added more comments to function declarations, fixed bug in findPath that was making me do a workaround
+        console.log('trying to pathfind from ' + a + ' to ' + b);
         var grid = this.cloneGrid();
 
         // NOTE: the destination is zeroed on grid before the search, if either are 1
         // the search algorithm wont work
 
-        grid[b[1]][b[0]] = 0;
-
         var pfgrid = new PF.Grid(grid);
-        var finder = new PF.AStarFinder();
+        var finder = new PF.AStarFinder(pfgrid);
         var path = finder.findPath(a[0], a[1], b[0], b[1], pfgrid);
 
         return path;
@@ -380,5 +363,4 @@ module.exports = class Board {
     print() {
         console.log(this.grid);
     }
-
 };
