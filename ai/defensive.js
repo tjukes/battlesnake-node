@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 const utils = require('./utils.js');
 
@@ -7,37 +7,37 @@ const utils = require('./utils.js');
  * will be unoccupied in n turns
  */
 function safeSpace(board, turns) {
-  // grid that could be occupied in n-turns
-  var grid = createGrid(board.width, board.height);
+    // grid that could be occupied in n-turns
+    var grid = createGrid(board.width, board.height);
 
-  //FIXME want to avoid including yourself in these loops!
-  // grab snakeheads
-  var headsCurrent = board.snakes.map((snake) => {
-    return snake.head;
-  });
+    //FIXME want to avoid including yourself in these loops!
+    // grab snakeheads
+    var headsCurrent = board.snakes.map((snake) => {
+        return snake.head;
+    });
 
-  // take away #turns from length of tail
-  board.snakes.forEach((snake) => {
-    var length = snake.coords.length;
-    //preserve at least one cell in length so head and tail errors don't happen
-    snake.coords.splice(Math.max(length - turns, 1), turns);
-  });
+    // take away #turns from length of tail
+    board.snakes.forEach((snake) => {
+        var length = snake.coords.length;
+        //preserve at least one cell in length so head and tail errors don't happen
+        snake.coords.splice(Math.max(length - turns, 1), turns);
+    });
 
-  for(let head of headsCurrent) {
-    for (var i = 1; i <= turns; i++) {
-      cells = utils.equiDistantFromHead(head, i, board.height, board.width);
-      cells.forEach((cell) => {
-        gridBlock(cell, grid)
-      })
+    for (let head of headsCurrent) {
+        for (var i = 1; i <= turns; i++) {
+            cells = utils.equiDistantFromHead(head, i, board.height, board.width);
+            cells.forEach((cell) => {
+                gridBlock(cell, grid);
+            });
+        }
     }
-  }
 
-  return grid;
+    return grid;
 }
 
 module.exports = {
-  safeSpace
-}
+    safeSpace
+};
 
 //****** Private functions ******//
 

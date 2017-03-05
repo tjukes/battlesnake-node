@@ -1,8 +1,8 @@
 function exampleAI(board) {
-  return {
-    confidence: .93,
-    move: "up"
-  }
+    return {
+        confidence: .93,
+        move: "up"
+    };
 }
 
-module.exports = exampleAI
+module.exports = exampleAI;
