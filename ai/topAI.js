@@ -108,7 +108,9 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     var weHaveAPathToTail = false;
     if (!isFirstMove)
         weHaveAPathToTail = board.hasPath(head, lastDifferentTail);
+
     var notHungry = snake.health_points > 55;
+
     var conditionsRightForTailChasing = !isFirstMove && weHaveAPathToTail && (snake.health_points < 99 && notHungry && snake.coords.length > 8);
     var wehaveAPathToFood = myPathsToFood.length > 0;
 
@@ -124,30 +126,31 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
         (!conditionsRightForTailChasing && !wehaveAPathToFood)) {
         console.log('I will chase my tail.');
         myMove = chaseTail(board, snake, lastDifferentTail);
-    }
+    } else {
 
-    if (wehaveAPathToFood) {
+        if (wehaveAPathToFood) {
 
-        var myFoodTargetIndex = board.getShortestPathIndex(myPathsToFood);
-        var myFoodPath = myPathsToFood[myFoodTargetIndex];
+            var myFoodTargetIndex = board.getShortestPathIndex(myPathsToFood);
+            var myFoodPath = myPathsToFood[myFoodTargetIndex];
 
-        if (myFoodPath) {
-            // is there food?
-            console.log('Heading to food @ ' + reqBody.food[myFoodTargetIndex]);
+            if (myFoodPath) {
+                // is there food?
+                console.log('Heading to food @ ' + reqBody.food[myFoodTargetIndex]);
 
-            myFoodPath.shift();
-            var nextCoordToFood = myFoodPath.shift();
-            myMove = board.directionBetweenCoords(head, nextCoordToFood);
+                myFoodPath.shift();
+                var nextCoordToFood = myFoodPath.shift();
+                myMove = board.directionBetweenCoords(head, nextCoordToFood);
 
 
-            console.log('I HAVE NO PATH TO FOOD - I AM LOST');
-            // just move randomly as long as the place I move to has path to tail.
-            // otherwise who knows..
+                console.log('I HAVE NO PATH TO FOOD - I AM LOST');
+                // just move randomly as long as the place I move to has path to tail.
+                // otherwise who knows..
 
-            // Do a sanity check on the chosen move with no fancy grid stuff, to
-            // (a) make sure we have a move
-            // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
+                // Do a sanity check on the chosen move with no fancy grid stuff, to
+                // (a) make sure we have a move
+                // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
 
+            }
         }
     }
     myMove = SanityCheck(myMove, head, board.snakesOnlyGrid);
