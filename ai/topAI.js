@@ -144,9 +144,6 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
             // just move randomly as long as the place I move to has path to tail.
             // otherwise who knows..
 
-            console.log('I think I will move ' + myMove);
-            console.log('-------------------------------------------------');
-
             // Do a sanity check on the chosen move with no fancy grid stuff, to
             // (a) make sure we have a move
             // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
