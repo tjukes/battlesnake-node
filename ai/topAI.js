@@ -70,7 +70,12 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
 
 
     var myPathsToFood = board.getPathsToFood(head, tail);
+
+    //if (myPathsToFood.length > 1) {
+    // of course add the auras..
+
     board.addAuraToOtherSnakeHeads(reqBody.you);
+    //}
 
     board.print();
 
@@ -93,10 +98,6 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
 
 
 
-    //if (myPathsToFood.length > 1) {
-    // of course add the auras..
-
-    //}
 
     var myMove = false;
 
@@ -151,11 +152,10 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
             // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
 
         }
+    }
+    myMove = SanityCheck(myMove, head, board.snakesOnlyGrid);
 
-        myMove = SanityCheck(myMove, head, board.snakesOnlyGrid);
-
-        console.log('I think I will move ' + myMove);
-        console.log('-------------------------------------------------');
-        return myMove;
-    };
+    console.log('I think I will move ' + myMove);
+    console.log('-------------------------------------------------');
+    return myMove;
 };
