@@ -108,7 +108,7 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     var weHaveAPathToTail = false;
     if (!isFirstMove)
         weHaveAPathToTail = board.hasPath(head, lastDifferentTail);
-    var notHungry = snake.health_points > 65;
+    var notHungry = snake.health_points > 55;
     var conditionsRightForTailChasing = !isFirstMove && weHaveAPathToTail && (snake.health_points < 99 && notHungry && snake.coords.length > 8);
     var wehaveAPathToFood = myPathsToFood.length > 0;
 
