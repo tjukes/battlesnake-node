@@ -7,6 +7,7 @@ var previousReqBody;
 var previousPreviousReqBody;
 // 2d array handling game history up till now
 var reqBodyHistories = [];
+var lastDiffTailByGame = [];
 // Handle POST request to '/start'
 router.post('/start', function(req, res) {
 
@@ -57,16 +58,15 @@ function updateAndGetHistory(reqBody) {
     var i = 0;
     for (var reqBodyHistory of reqBodyHistories) {
         if (reqBodyHistory[0].game_id == gameID) {
-            console.log('FOUND GAME ARRAY AT ' + i);
+
             break;
         }
         i++;
     }
     if (i == reqBodyHistories.length) {
         // if this game not yet in histories - add it
-        console.log('ADDING GAME ');
         // begin a new game history
-        reqBodyHistories.push([]);
+        lastDiffTailByGame.push([]);
         // set game history index to newest addition
         i = reqBodyHistories.length - 1;
     }

@@ -5,6 +5,7 @@ var Snake = require('../ai/Snake.js');
 var SanityCheck = require('../ai/sanityCheck.js');
 var chaseTail = require('../ai/ChaseTail.js');
 var lastDifferentTail = false;
+var lastDifferentTailByGame = {};
 
 function findLastDifferentTail(reqBodyHistory) {
     var currentReqBody = reqBodyHistory[reqBodyHistory.length - 1];
@@ -18,6 +19,10 @@ function findLastDifferentTail(reqBodyHistory) {
         }
     }
     return snake.tail;
+}
+
+function has(object, key) {
+    return object ? hasOwnProperty.call(object, key) : false;
 }
 
 function getPreviousTail(reqBodyHistory) {
@@ -37,7 +42,11 @@ function equal(coord1, coord2) {
 }
 module.exports = function getMyMove(reqBody, reqBodyHistory) {
 
-    var isFirstMove = (reqBodyHistory.length < 3);
+    if (has(lastDifferentTailByGame, reqBody.game_id)) {
+        lastDifferentTail = lastDifferentTailByGame[reqBody.game_id];
+    }
+
+    var isFirstMove = (reqBodyHistory.length < 4);
 
     var snake = new Snake(reqBody, reqBody.you);
 
@@ -51,12 +60,17 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
         }
     }
 
+    lastDifferentTailByGame[reqBody.game_id] = lastDifferentTail;
 
     var head = snake.head;
     var tail = snake.tail;
 
     // create a can't-go-there grid in board.grid
     var board = new Board(reqBody);
+
+
+    var myPathsToFood = board.getPathsToFood(head, tail);
+    board.addAuraToOtherSnakeHeads(reqBody.you);
 
     board.print();
 
@@ -77,14 +91,12 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
     if (!isFirstMove)
         console.log('Is lastTail open?' + board.isGridOpen(lastDifferentTail));
 
-    var myPathsToFood = board.getPathsToFood(head, tail);
-
-    if (myPathsToFood.length > 1) {
-        // of course add the auras..
-        //  board.addAuraToOtherSnakeHeads(reqBody.you);
-    }
 
 
+    //if (myPathsToFood.length > 1) {
+    // of course add the auras..
+
+    //}
 
     var myMove = false;
 
@@ -125,28 +137,25 @@ module.exports = function getMyMove(reqBody, reqBodyHistory) {
             myFoodPath.shift();
             var nextCoordToFood = myFoodPath.shift();
             myMove = board.directionBetweenCoords(head, nextCoordToFood);
-        } else {
-            console.log(myPathsToFood);
-            throw new Error('SOME THING WRONG!');
+
+
+            console.log('I HAVE NO PATH TO FOOD - I AM LOST');
+            // just move randomly as long as the place I move to has path to tail.
+            // otherwise who knows..
+
+            console.log('I think I will move ' + myMove);
+            console.log('-------------------------------------------------');
+
+            // Do a sanity check on the chosen move with no fancy grid stuff, to
+            // (a) make sure we have a move
+            // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
+
         }
-    }
-    if (!myMove) {
-        console.log('I HAVE NO PATH TO FOOD - I AM LOST');
-        // just move randomly as long as the place I move to has path to tail.
-        // otherwise who knows..
+
+        myMove = SanityCheck(myMove, head, board.snakesOnlyGrid);
 
         console.log('I think I will move ' + myMove);
         console.log('-------------------------------------------------');
-
-        // Do a sanity check on the chosen move with no fancy grid stuff, to
-        // (a) make sure we have a move
-        // (b) make sure the move doesn't bump us into ourselves, another snake, or a wall
-        myMove = SanityCheck(myMove, head, board.snakesOnlyGrid);
-
-
-    }
-
-    console.log('I think I will move ' + myMove);
-    console.log('-------------------------------------------------');
-    return myMove;
+        return myMove;
+    };
 };

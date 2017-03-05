@@ -87,6 +87,7 @@ module.exports = class Board {
         this.width = body.width;
         this.height = body.height;
         this.myID = body.you; // our snake's ID
+        //this.snakes = body.snakes.map((snakeData) => new Snake(body, snakeData.id));
         this.snakes = body.snakes;
         this.food = body.food;
         this.displayGrid = this.createGrid(body.width, body.height);
@@ -189,6 +190,8 @@ module.exports = class Board {
     addAuraToOtherSnakeHeads(myID) {
         for (var snake of this.snakes) {
             if (snake.id !== myID) {
+                console.log('COORD: ');
+                console.log(this.getNeighborCoords(snake.coords[0]));
                 for (var coord of this.getNeighborCoords(snake.coords[0])) {
                     this.gridBlock(coord);
                 }
@@ -236,20 +239,7 @@ module.exports = class Board {
         }
         return newgrid;
     }
-    // adds the snakes coordinates to the PF grid
-    addSnakes(snakes) {
-        this.snakes = snakes;
-        for (var snake of snakes) {
-            for (var snakeCoords of snake.coords) {
-                var x, y;
-                x = snakeCoords[0];
-                y = snakeCoords[1];
-                this.grid[y][x] = 1;
 
-            }
-        }
-
-    }
     // this function does nothing for now, but can be useful for debugging
     addFood(foods) {
         this.food = foods;
@@ -264,8 +254,8 @@ module.exports = class Board {
     isInBounds(coord) {
         var x = coord[0];
         var y = coord[1];
-        return (x >= 0 && x < this.size) &&
-            (y >= 0 && y < this.size);
+        return (x >= 0 && x < this.width) &&
+            (y >= 0 && y < this.height);
     }
 
     // given a coord ([x,y]), returns an array of neighboring coordinates
