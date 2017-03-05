@@ -46,6 +46,6 @@ describe("topAI", () => {
     };
   });
   it("returns one of up, down, left, or right", () => {
-    expect(topAI(mockRequest)).toMatch(/up|down|left|right/);
+    expect(topAI(mockRequest, [])).toMatch(/up|down|left|right/);
   });
 });
