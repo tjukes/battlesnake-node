@@ -116,6 +116,19 @@ function getRandomFreeNeighbor(coord, grid) {
   return freeNeighbors[Math.floor(Math.random() * freeNeighbors.length)];
 }
 
+// Check otherwise open neighbouring coordinates
+// to see if one of their neighbours is another snake's head
+// ie, could result in head-on collision
+// function isEnemyAura(coord, myID, grid) {
+//   var safeNeighbours = [];
+//   // get coord's neighbours
+//   var neighbours = getNeighborCoords(coord, grid);
+//   // if neighbour's neighbour is a snake head
+//   for (var neighbour of neighbours) {
+//     var nextNeighbours = getNeighborCoords(neighbour, grid);
+//     // for
+//   }
+// }
 
 module.exports = {
   directionBetweenCoords,
