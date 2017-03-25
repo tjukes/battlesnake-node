@@ -3,8 +3,9 @@
 ### Table of Contents
 
 -   [Snakespeare](#snakespeare)
-    -   [Team: Nate Rosenstock, Arkadi Futerman, Ryder Bergerud, Tana Jukes](#team-nate-rosenstock-arkadi-futerman-ryder-bergerud-tana-jukes)
-        -   -   [documentation](#documentation)
+    -   [Team: Nate Rosenstock, Arkady Futerman, Ryder Bergerud, Tana Jukes](#team-nate-rosenstock-arkady-futerman-ryder-bergerud-tana-jukes)
+        -   [about](#about)
+        -   [documentation](#documentation)
         -   [git-stuff](#git-stuff)
         -   [testing](#testing)
     -   [Deploying to Heroku](#deploying-to-heroku)
@@ -29,12 +30,24 @@
 -   [getNeighboursIndex](#getneighboursindex)
 -   [checkTailGrowth](#checktailgrowth)
 -   [taxiDistance](#taxidistance)
+-   [taxiDistance](#taxidistance-1)
 
 ## Snakespeare
 
-### Team: Nate Rosenstock, Arkadi Futerman, Ryder Bergerud, Tana Jukes
+### Team: Nate Rosenstock, Arkady Futerman, Ryder Bergerud, Tana Jukes
 
-##### documentation
+#### about
+
+Individual work incorporated via pull requests.  See [PRs](https://github.com/tjukes/battlesnake-node/pulls?q=is%3Apr+is%3Aclosed) and [open branches](https://github.com/tjukes/battlesnake-node/branches) for details on each team member's work.  
+
+-   Nate: Avoid snake heads, follow tail, game history, avoid dead ends. See
+-   Ryder: Safe spaces, OO snakes, probabilistic grids, tests.
+-   Tana: Sanity checking, longest open path (not implemented), coordinating code compatability.
+-   Arkady:
+
+The snake was ultimately deployed from the branch `nate-new` to <http://this-snake.herokuapp.com/>.
+
+#### documentation
 
 To compile docs,
 `npm run docs`
