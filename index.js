@@ -19,51 +19,53 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(routes)
 
-app.use('*',function (req, res, next) {
-  if (req.url === '/favicon.ico') {
-    // Short-circuit favicon requests
-    res.set({'Content-Type': 'image/x-icon'})
-    res.status(200)
-    res.end()
-    next()
-  } else {
-    // Reroute all 404 routes to the 404 handler
-    var err = new Error()
-    err.status = 404
-    next(err)
-  }
+app.use('*', function(req, res, next) {
+    if (req.url === '/favicon.ico') {
+        // Short-circuit favicon requests
+        res.set({
+            'Content-Type': 'image/x-icon'
+        })
+        res.status(200)
+        res.end()
+        next()
+    } else {
+        // Reroute all 404 routes to the 404 handler
+        var err = new Error()
+        err.status = 404
+        next(err)
+    }
 
-  return
+    return
 })
 
 // 404 handler middleware, respond with JSON only
-app.use(function (err, req, res, next) {
-  if (err.status !== 404) {
-    return next(err)
-  }
+app.use(function(err, req, res, next) {
+    if (err.status !== 404) {
+        return next(err)
+    }
 
-  res.status(404)
-  res.send({
-    status: 404,
-    error: err.message || "These are not the snakes you're looking for"
-  })
+    res.status(404)
+    res.send({
+        status: 404,
+        error: err.message || "These are not the snakes you're looking for"
+    })
 
-  return
+    return
 })
 
 // 500 handler middleware, respond with JSON only
-app.use(function (err, req, res, next) {
-  var statusCode = err.status || 500
+app.use(function(err, req, res, next) {
+    var statusCode = err.status || 500
 
-  res.status(statusCode)
-  res.send({
-    status: statusCode,
-    error: err
-  })
+    res.status(statusCode)
+    res.send({
+        status: statusCode,
+        error: err
+    })
 
-  return
+    return
 })
 
-var server = app.listen(app.get('port'), function () {
-  console.log('Server listening on port %s', app.get('port'))
+var server = app.listen(app.get('port'), function() {
+    console.log('Server listening on port %s', app.get('port'))
 })
